@@ -39,6 +39,8 @@
             // 
             // lowStock_GV
             // 
+            lowStock_GV.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lowStock_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             lowStock_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             lowStock_GV.Location = new Point(32, 114);
             lowStock_GV.Name = "lowStock_GV";
