@@ -44,5 +44,13 @@ namespace login_page
             form2.ShowDialog();
             this.Close();
         }
+
+        private void AddNewDrug_btn_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            AddNewDrugs_Form addNewDrugs_Form = new();
+            addNewDrugs_Form.ShowDialog();
+            this.Close();
+        }
     }
 }

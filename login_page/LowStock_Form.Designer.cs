@@ -34,18 +34,20 @@
             search_min_btn = new Button();
             label1 = new Label();
             Reset_btn = new Button();
+            textBox1 = new TextBox();
+            Search_btn = new Button();
             ((System.ComponentModel.ISupportInitialize)lowStock_GV).BeginInit();
             SuspendLayout();
             // 
             // lowStock_GV
             // 
-            lowStock_GV.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lowStock_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lowStock_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             lowStock_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            lowStock_GV.Location = new Point(32, 114);
+            lowStock_GV.Location = new Point(0, 96);
             lowStock_GV.Name = "lowStock_GV";
             lowStock_GV.RowHeadersWidth = 51;
-            lowStock_GV.Size = new Size(628, 302);
+            lowStock_GV.Size = new Size(800, 353);
             lowStock_GV.TabIndex = 0;
             // 
             // ignoreZero_checkBox
@@ -98,6 +100,24 @@
             Reset_btn.UseVisualStyleBackColor = true;
             Reset_btn.Click += Reset_btn_Click;
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(166, 42);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(125, 27);
+            textBox1.TabIndex = 2;
+            textBox1.KeyDown += minimum_txt_KeyDown;
+            // 
+            // Search_btn
+            // 
+            Search_btn.Location = new Point(32, 40);
+            Search_btn.Name = "Search_btn";
+            Search_btn.Size = new Size(94, 29);
+            Search_btn.TabIndex = 3;
+            Search_btn.Text = "Search";
+            Search_btn.UseVisualStyleBackColor = true;
+            Search_btn.Click += search_min_btn_Click;
+            // 
             // LowStock_Form
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -105,7 +125,9 @@
             ClientSize = new Size(800, 450);
             Controls.Add(Reset_btn);
             Controls.Add(label1);
+            Controls.Add(Search_btn);
             Controls.Add(search_min_btn);
+            Controls.Add(textBox1);
             Controls.Add(minimum_txt);
             Controls.Add(ignoreZero_checkBox);
             Controls.Add(lowStock_GV);
@@ -126,5 +148,7 @@
         private Button search_min_btn;
         private Label label1;
         private Button Reset_btn;
+        private TextBox textBox1;
+        private Button Search_btn;
     }
 }

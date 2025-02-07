@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(main_Form));
             panel1 = new Panel();
             panel2 = new Panel();
+            AddNewDrug_btn = new Button();
+            history_btn = new Button();
             lowStock_btn = new Button();
             label4 = new Label();
             quantity = new TextBox();
@@ -39,7 +40,6 @@
             label1 = new Label();
             label2 = new Label();
             price = new TextBox();
-            history_btn = new Button();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -55,6 +55,7 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(33, 11, 97);
+            panel2.Controls.Add(AddNewDrug_btn);
             panel2.Controls.Add(history_btn);
             panel2.Controls.Add(lowStock_btn);
             panel2.Controls.Add(label4);
@@ -69,6 +70,26 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(478, 720);
             panel2.TabIndex = 1;
+            // 
+            // AddNewDrug_btn
+            // 
+            AddNewDrug_btn.Location = new Point(254, 46);
+            AddNewDrug_btn.Name = "AddNewDrug_btn";
+            AddNewDrug_btn.Size = new Size(191, 29);
+            AddNewDrug_btn.TabIndex = 11;
+            AddNewDrug_btn.Text = "Add New drugs ";
+            AddNewDrug_btn.UseVisualStyleBackColor = true;
+            AddNewDrug_btn.Click += AddNewDrug_btn_Click;
+            // 
+            // history_btn
+            // 
+            history_btn.Location = new Point(254, 447);
+            history_btn.Name = "history_btn";
+            history_btn.Size = new Size(134, 29);
+            history_btn.TabIndex = 10;
+            history_btn.Text = "IN/OUT History ";
+            history_btn.UseVisualStyleBackColor = true;
+            history_btn.Click += history_btn_Click;
             // 
             // lowStock_btn
             // 
@@ -151,16 +172,6 @@
             price.Size = new Size(146, 34);
             price.TabIndex = 1;
             // 
-            // history_btn
-            // 
-            history_btn.Location = new Point(254, 447);
-            history_btn.Name = "history_btn";
-            history_btn.Size = new Size(134, 29);
-            history_btn.TabIndex = 10;
-            history_btn.Text = "IN/OUT History ";
-            history_btn.UseVisualStyleBackColor = true;
-            history_btn.Click += history_btn_Click;
-            // 
             // main_Form
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -169,7 +180,6 @@
             ClientSize = new Size(1312, 755);
             Controls.Add(panel2);
             Controls.Add(panel1);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "main_Form";
             Text = "Pharmacy Stock";
             WindowState = FormWindowState.Maximized;
@@ -192,5 +202,6 @@
         private TextBox added_qantity;
         private Button lowStock_btn;
         private Button history_btn;
+        private Button AddNewDrug_btn;
     }
 }
