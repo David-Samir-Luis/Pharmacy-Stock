@@ -27,7 +27,7 @@ namespace login_page
             DialogResult result = MessageBox.Show(
             "You will lose your prograss?",   // Message text
             "Confirmation",               // Title
-            MessageBoxButtons.YesNo,      // Buttons: Yes & No
+            MessageBoxButtons.YesNoCancel,      // Buttons: Yes & No & Cancel 
             MessageBoxIcon.Question       // Icon: Question Mark
             );
 

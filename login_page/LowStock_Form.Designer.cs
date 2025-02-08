@@ -32,10 +32,7 @@
             ignoreZero_checkBox = new CheckBox();
             minimum_txt = new TextBox();
             search_min_btn = new Button();
-            label1 = new Label();
             Reset_btn = new Button();
-            textBox1 = new TextBox();
-            Search_btn = new Button();
             ((System.ComponentModel.ISupportInitialize)lowStock_GV).BeginInit();
             SuspendLayout();
             // 
@@ -59,15 +56,18 @@
             ignoreZero_checkBox.TabIndex = 1;
             ignoreZero_checkBox.Text = "Ignore zero Quantities";
             ignoreZero_checkBox.UseVisualStyleBackColor = true;
-            ignoreZero_checkBox.CheckedChanged += ignoreZero_checkBox_CheckedChanged;
             // 
             // minimum_txt
             // 
+            minimum_txt.ForeColor = Color.Gray;
             minimum_txt.Location = new Point(166, 42);
             minimum_txt.Name = "minimum_txt";
-            minimum_txt.Size = new Size(125, 27);
+            minimum_txt.Size = new Size(198, 27);
             minimum_txt.TabIndex = 2;
+            minimum_txt.Text = "Enter Minimum Quantity . . .";
+            minimum_txt.Enter += minimum_txt_Enter;
             minimum_txt.KeyDown += minimum_txt_KeyDown;
+            minimum_txt.Leave += minimum_txt_Leave;
             // 
             // search_min_btn
             // 
@@ -79,20 +79,9 @@
             search_min_btn.UseVisualStyleBackColor = true;
             search_min_btn.Click += search_min_btn_Click;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.ForeColor = SystemColors.ControlText;
-            label1.Location = new Point(32, 13);
-            label1.Name = "label1";
-            label1.Size = new Size(174, 20);
-            label1.TabIndex = 4;
-            label1.Text = "Enter Minimum Quantity ";
-            label1.Click += label1_Click;
-            // 
             // Reset_btn
             // 
-            Reset_btn.Location = new Point(382, 50);
+            Reset_btn.Location = new Point(408, 42);
             Reset_btn.Name = "Reset_btn";
             Reset_btn.Size = new Size(94, 29);
             Reset_btn.TabIndex = 5;
@@ -100,34 +89,13 @@
             Reset_btn.UseVisualStyleBackColor = true;
             Reset_btn.Click += Reset_btn_Click;
             // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(166, 42);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(125, 27);
-            textBox1.TabIndex = 2;
-            textBox1.KeyDown += minimum_txt_KeyDown;
-            // 
-            // Search_btn
-            // 
-            Search_btn.Location = new Point(32, 40);
-            Search_btn.Name = "Search_btn";
-            Search_btn.Size = new Size(94, 29);
-            Search_btn.TabIndex = 3;
-            Search_btn.Text = "Search";
-            Search_btn.UseVisualStyleBackColor = true;
-            Search_btn.Click += search_min_btn_Click;
-            // 
             // LowStock_Form
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(Reset_btn);
-            Controls.Add(label1);
-            Controls.Add(Search_btn);
             Controls.Add(search_min_btn);
-            Controls.Add(textBox1);
             Controls.Add(minimum_txt);
             Controls.Add(ignoreZero_checkBox);
             Controls.Add(lowStock_GV);
@@ -146,9 +114,6 @@
         private CheckBox ignoreZero_checkBox;
         private TextBox minimum_txt;
         private Button search_min_btn;
-        private Label label1;
         private Button Reset_btn;
-        private TextBox textBox1;
-        private Button Search_btn;
     }
 }

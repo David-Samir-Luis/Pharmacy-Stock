@@ -14,17 +14,21 @@ namespace login_page
 {
     public partial class LowStock_Form : Form
     {
-        PharmacyStoreContext db = new PharmacyStoreContext();
+        List<Medicine> medicinesList;
 
         public LowStock_Form()
         {
             InitializeComponent();
+            using (PharmacyStoreContext db = new PharmacyStoreContext())
+            {
+                medicinesList = db.Medicines.ToList();
+            }
         }
         private void displayLowStock_GV()
         {
-            IEnumerable<Medicine> medicines_var = db.Medicines.ToList();
+            IEnumerable<Medicine> medicines_var = medicinesList;
             int min;
-            if (!string.IsNullOrWhiteSpace(minimum_txt.Text))
+            if (!(minimum_txt.Text == "Enter Minimum Quantity . . ."))
             {
                 try
                 {
@@ -32,10 +36,11 @@ namespace login_page
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Incorrect number!");
+                    MessageBox.Show("Incorrect number!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                medicines_var = medicines_var.Where(n => (n.Quantity <= (min <= 0 ? 0 : min)))
+                min = min <= 0 ? 0 : min;
+                medicines_var = medicines_var.Where(n => (n.Quantity <= min))
                     .ToList();
             }
             else
@@ -43,6 +48,7 @@ namespace login_page
                 medicines_var = medicines_var.Where(n => (n.Quantity <= n.MinimumQuantity))
                 .ToList();
             }
+
             if (ignoreZero_checkBox.Checked)
             {
 
@@ -53,6 +59,8 @@ namespace login_page
             {
                 // do Nothing
             }
+
+
             lowStock_GV.DataSource = medicines_var.Select(n => new
             {
                 Code = n.Code,
@@ -61,21 +69,11 @@ namespace login_page
                 MinimumQuantity = n.MinimumQuantity
             })
                 .ToList();
-
-        }
-        private void ignoreZero_checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            displayLowStock_GV();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void LowStock_Form_Load(object sender, EventArgs e)
         {
-            lowStock_GV.DataSource = db.Medicines.Where(n => n.Quantity <= n.MinimumQuantity)
+            lowStock_GV.DataSource = medicinesList.Where(n => n.Quantity <= n.MinimumQuantity)
                 .Select(n => new
                 {
                     Code = n.Code,
@@ -87,9 +85,10 @@ namespace login_page
 
         private void Reset_btn_Click(object sender, EventArgs e)
         {
-            minimum_txt.Text = "";
             ignoreZero_checkBox.Checked = false;
-            lowStock_GV.DataSource = db.Medicines.Where(n => n.Quantity <= n.MinimumQuantity)
+            minimum_txt.Text = "Enter Minimum Quantity . . .";  // Restore placeholder
+            minimum_txt.ForeColor = Color.Gray;  // Set text color to gray
+            lowStock_GV.DataSource = medicinesList.Where(n => n.Quantity <= n.MinimumQuantity)
                 .Select(n => new
                 {
                     Code = n.Code,
@@ -101,7 +100,6 @@ namespace login_page
 
         private void search_min_btn_Click(object sender, EventArgs e)
         {
-
             displayLowStock_GV();
         }
 
@@ -109,7 +107,25 @@ namespace login_page
         {
             if (e.KeyCode == Keys.Enter)
             {
-                displayLowStock_GV();
+                search_min_btn_Click(sender, e);
+            }
+        }
+
+        private void minimum_txt_Enter(object sender, EventArgs e)
+        {
+            if (minimum_txt.Text == "Enter Minimum Quantity . . ." && minimum_txt.ForeColor == Color.Gray)
+            {
+                minimum_txt.Text = "";  // Clear the placeholder
+                minimum_txt.ForeColor = Color.Black;  // Set text color to black
+            }
+        }
+
+        private void minimum_txt_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(minimum_txt.Text))
+            {
+                minimum_txt.Text = "Enter Minimum Quantity . . .";  // Restore placeholder
+                minimum_txt.ForeColor = Color.Gray;  // Set text color to gray
             }
         }
     }

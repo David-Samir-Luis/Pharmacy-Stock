@@ -13,20 +13,26 @@ namespace login_page
 {
     public partial class Form2 : Form
     {
-        PharmacyStoreContext db = new PharmacyStoreContext();
+        List<OperationsHistory> operationsHistoryList;
+        List<OperationsMedicine> operationsMedicineList;
         public Form2()
         {
             InitializeComponent();
+            using (PharmacyStoreContext db = new PharmacyStoreContext())
+            {
+                operationsHistoryList=db.OperationsHistories.ToList();
+                operationsMedicineList=db.OperationsMedicines.ToList();
+            }
         }
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = db.OperationsHistories.Select(s => new { OperationId = s.OperationId, OperationType = s.OperationType, OperationTime=s.OperationTime }).ToList();
+            dataGridView1.DataSource = operationsHistoryList.Select(s => new { OperationId = s.OperationId, OperationType = s.OperationType, OperationTime = s.OperationTime }).ToList();
 
             dataGridView1.ClearSelection(); // Clears any previous selection
             dataGridView1.Rows[0].Selected = true; // Selects the first row
 
-            dataGridView2.DataSource = db.OperationsMedicines.Where(o => o.OperationId == (int)dataGridView1.SelectedRows[0].Cells[0].Value).ToList();
+            dataGridView2.DataSource = operationsMedicineList.Where(o => o.OperationId == (int)dataGridView1.SelectedRows[0].Cells[0].Value).ToList();
 
         }
 
@@ -42,11 +48,11 @@ namespace login_page
             }
             if (dataGridView1.SelectedRows.Count > 0)  // Check if any row is selected
             {
-                dataGridView2.DataSource = db.OperationsMedicines.Where(o => o.OperationId == (int)dataGridView1.SelectedRows[0].Cells[0].Value).ToList();
-            
-            }
+                dataGridView2.DataSource = operationsMedicineList.Where(o => o.OperationId == (int)dataGridView1.SelectedRows[0].Cells[0].Value).ToList();
 
             }
+
+        }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
