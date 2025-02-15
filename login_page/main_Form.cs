@@ -18,5 +18,39 @@ namespace login_page
             price.Enabled = false;
             quantity.Enabled = false;
         }
+
+        private void main_Form_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void added_qantity_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lowStock_btn_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            LowStock_Form lowStock_Form = new();
+            lowStock_Form.ShowDialog();
+            this.Close();
+        }
+
+        private void history_btn_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form2 form2 = new();
+            form2.ShowDialog();
+            this.Close();
+        }
+
+        private void AddNewDrug_btn_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            AddNewDrugs_Form addNewDrugs_Form = new();
+            addNewDrugs_Form.ShowDialog();
+            this.Close();
+        }
     }
 }
