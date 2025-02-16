@@ -39,13 +39,13 @@
             // lowStock_GV
             // 
             lowStock_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lowStock_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             lowStock_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             lowStock_GV.Location = new Point(0, 96);
             lowStock_GV.Name = "lowStock_GV";
             lowStock_GV.RowHeadersWidth = 51;
             lowStock_GV.Size = new Size(800, 353);
             lowStock_GV.TabIndex = 0;
+            lowStock_GV.VirtualMode = true;
             // 
             // ignoreZero_checkBox
             // 
