@@ -182,10 +182,10 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(side_panel);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "login_form";
             Text = "Pharmacy Stock";
             WindowState = FormWindowState.Maximized;
+            Load += login_form_Load;
             side_panel.ResumeLayout(false);
             side_panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

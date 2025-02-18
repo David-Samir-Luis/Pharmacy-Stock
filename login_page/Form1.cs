@@ -1,3 +1,5 @@
+using login_page.Models;
+
 namespace login_page
 {
     public partial class login_form : Form
@@ -51,6 +53,9 @@ namespace login_page
             }
         }
 
-     
+        private void login_form_Load(object sender, EventArgs e)
+        {
+            DbServices.Instance.LoadAllDataAsync();
+        }
     }
 }
