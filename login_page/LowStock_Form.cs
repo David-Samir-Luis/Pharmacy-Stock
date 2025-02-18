@@ -14,19 +14,13 @@ namespace login_page
 {
     public partial class LowStock_Form : Form
     {
-        List<Medicine> medicinesList;
-        
         public LowStock_Form()
         {
             InitializeComponent();
-            using (PharmacyStoreContext db = new PharmacyStoreContext())
-            {
-                medicinesList = db.Medicines.ToList();
-            }
         }
         private void displayLowStock_GV()
         {
-            IEnumerable<Medicine> medicines_var = medicinesList;
+            IEnumerable<Medicine> medicines_var = DbServices.Instance.GetData<Medicine>();
             int min;
             if (!(minimum_txt.Text == "Enter Minimum Quantity . . ."))
             {              
@@ -74,7 +68,7 @@ namespace login_page
 
         private void LowStock_Form_Load(object sender, EventArgs e)
         {
-            lowStock_GV.DataSource = medicinesList.Where(n => n.Quantity <= n.MinimumQuantity)
+            lowStock_GV.DataSource = DbServices.Instance.GetData<Medicine>().Where(n => n.Quantity <= n.MinimumQuantity)
                 .Select(n => new
                 {
                     Code = n.Code,
@@ -89,7 +83,7 @@ namespace login_page
             ignoreZero_checkBox.Checked = false;
             minimum_txt.Text = "Enter Minimum Quantity . . .";  // Restore placeholder
             minimum_txt.ForeColor = Color.Gray;  // Set text color to gray
-            lowStock_GV.DataSource = medicinesList.Where(n => n.Quantity <= n.MinimumQuantity)
+            lowStock_GV.DataSource = DbServices.Instance.GetData<Medicine>().Where(n => n.Quantity <= n.MinimumQuantity)
                 .Select(n => new
                 {
                     Code = n.Code,
