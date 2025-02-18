@@ -15,35 +15,34 @@ namespace login_page
 {
     public partial class LowStock_Form : Form
     {
-        List<Medicine> medicinesList;
         public LowStock_Form()
         {
-            InitializeComponent();         
+            InitializeComponent();
         }
         private void LoadMedicinesOnGridView()
         {
-            lowStock_GV.DataSource=DbServices.Instance.GetData<Medicine>().Where(n => n.Quantity <= n.MinimumQuantity)
+            lowStock_GV.DataSource = DbServices.Instance.GetData<Medicine>().Where(n => n.Quantity <= n.MinimumQuantity)
                 .Select(n => new
                 {
                     Code = n.Code,
                     Name = n.Name,
                     Quantity = n.Quantity,
                     MinimumQuantity = n.MinimumQuantity
-                }).ToList();      
+                }).ToList();
         }
         private void displayLowStock_GV()
         {
             IEnumerable<Medicine> medicines_var = DbServices.Instance.GetData<Medicine>();
             int min;
             if (!(minimum_txt.Text == "Enter Minimum Quantity . . ."))
-            {              
+            {
                 try
                 {
                     min = int.Parse(minimum_txt.Text);
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Incorrect number!","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);                   
+                    MessageBox.Show("Incorrect number!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 min = min <= 0 ? 0 : min;
@@ -55,8 +54,8 @@ namespace login_page
                 medicines_var = medicines_var.Where(n => (n.Quantity <= n.MinimumQuantity))
                 .ToList();
             }
-            
-             if (ignoreZero_checkBox.Checked)
+
+            if (ignoreZero_checkBox.Checked)
             {
 
                 medicines_var = medicines_var.Where(n => n.Quantity != 0)
@@ -108,7 +107,7 @@ namespace login_page
         {
             if (e.KeyCode == Keys.Enter)
             {
-                search_min_btn_Click(sender,e);
+                search_min_btn_Click(sender, e);
             }
         }
 
