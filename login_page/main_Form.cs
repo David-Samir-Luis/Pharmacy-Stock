@@ -15,8 +15,7 @@ namespace login_page
         public main_Form()
         {
             InitializeComponent();
-            price.Enabled = false;
-            quantity.Enabled = false;
+          
         }
 
         private void main_Form_Load(object sender, EventArgs e)
