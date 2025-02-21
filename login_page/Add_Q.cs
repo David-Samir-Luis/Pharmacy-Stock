@@ -17,6 +17,7 @@ namespace login_page
         public Add_Q()
         {
             InitializeComponent();
+            searchBy_Combo.SelectedIndex = 0;
         }
 
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -36,35 +37,49 @@ namespace login_page
         {
             List<Medicine> item;
 
-                switch (searchBy_Combo?.SelectedItem?.ToString())
-                {
-                    case "Name":
-                        item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name.ToLower() == search_txt.Text.ToLower()).ToList();
-                        break;
-                    case "barcode":
-                        ///to do search by barcode 
-                        item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode == search_txt.Text).ToList();
-                        break;
-                    case "Code":
-                        ///to do search by code 
-                        item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code == search_txt.Text).ToList();
-                        break;
-                    default:
-                        item = null;
-                        break;
-                }
+            switch (searchBy_Combo?.SelectedItem?.ToString())
+            {
+                case "Name":
+                    item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name.ToLower() == search_txt.Text.ToLower()).ToList();
+                    break;
+                case "Barcode":
+                    ///to do search by barcode 
+                    item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode == search_txt.Text).ToList();
+                    break;
+                case "Code":
+                    ///to do search by code 
+                    item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code == search_txt.Text).ToList();
+                    break;
+                default:
+                    item = null;
+                    break;
+            }
 
-                if (item.Any())
-                {
-                    itemsToBeAdded_ls.Add(item.First());
-                }
-                else
-                {
-                    MessageBox.Show("NO such item!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            if (item?.Any() ?? false)
+            {
+                itemsToBeAdded_ls.Add(item.First());
+            }
+            else
+            {
+                MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             itemsToBeAdded_GV.DataSource = null;
             itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
             //MessageBox.Show(itemsToBeAdded_ls.Count.ToString());
         }
+
+        private void Add_Q_Load(object sender, EventArgs e)
+        {
+            search_txt.Focus();
+            CenterButton();
+        }
+        private void CenterButton()
+        {
+            int x = (itemsToBeAdded_GV.Width - save_n.Width) / 3;           
+            save_n.Location = new Point(x,save_n.Location.Y);
+            cancel_n.Location = new Point(2*x,cancel_n.Location.Y);
+
+        }
+
     }
 }
