@@ -36,6 +36,9 @@ public partial class PharmacyStoreContext : DbContext
             entity.Property(e => e.Code)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.Barcode)
+                .HasMaxLength(10)
+                .IsUnicode(false);
             entity.Property(e => e.ExpiryDate).HasColumnName("Expiry_date");
             entity.Property(e => e.MinimumQuantity).HasDefaultValue(5);
             entity.Property(e => e.Name)

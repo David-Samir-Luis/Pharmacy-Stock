@@ -15,7 +15,7 @@ namespace login_page
         public main_Form()
         {
             InitializeComponent();
-          
+
         }
 
         private void main_Form_Load(object sender, EventArgs e)
@@ -50,6 +50,11 @@ namespace login_page
             AddNewDrugs_Form addNewDrugs_Form = new();
             addNewDrugs_Form.ShowDialog();
             this.Close();
+        }
+
+        private void Add_New_Drug_Click(object sender, EventArgs e)
+        {
+            add_q1.Show();
         }
     }
 }
