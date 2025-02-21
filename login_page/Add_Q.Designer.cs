@@ -32,9 +32,13 @@
             search_txt = new TextBox();
             search_btn = new Button();
             itemsToBeAdded_GV = new DataGridView();
-            cancel_btn = new Button();
-            save_btn = new Button();
+            save_n = new Button();
+            cancel_n = new Button();
+            panel1 = new Panel();
+            panel2 = new Panel();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // searchBy_Combo
@@ -71,43 +75,76 @@
             itemsToBeAdded_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             itemsToBeAdded_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             itemsToBeAdded_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            itemsToBeAdded_GV.Location = new Point(45, 92);
+            itemsToBeAdded_GV.Location = new Point(57, 8);
             itemsToBeAdded_GV.Name = "itemsToBeAdded_GV";
             itemsToBeAdded_GV.RowHeadersWidth = 51;
-            itemsToBeAdded_GV.Size = new Size(823, 251);
+            itemsToBeAdded_GV.Size = new Size(958, 527);
             itemsToBeAdded_GV.TabIndex = 9;
             // 
-            // cancel_btn
+            // save_n
             // 
-            cancel_btn.Location = new Point(584, 444);
-            cancel_btn.Name = "cancel_btn";
-            cancel_btn.Size = new Size(94, 29);
-            cancel_btn.TabIndex = 8;
-            cancel_btn.Text = "Cancel";
-            cancel_btn.UseVisualStyleBackColor = true;
+            save_n.BackColor = Color.FromArgb(33, 8, 97);
+            save_n.FlatAppearance.MouseDownBackColor = Color.FromArgb(75, 8, 138);
+            save_n.FlatAppearance.MouseOverBackColor = Color.FromArgb(75, 8, 138);
+            save_n.FlatStyle = FlatStyle.Flat;
+            save_n.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            save_n.ForeColor = Color.White;
+            save_n.Location = new Point(200, 15);
+            save_n.Name = "save_n";
+            save_n.Size = new Size(200, 40);
+            save_n.TabIndex = 13;
+            save_n.Text = "Save";
+            save_n.UseVisualStyleBackColor = false;
             // 
-            // save_btn
+            // cancel_n
             // 
-            save_btn.Location = new Point(141, 444);
-            save_btn.Name = "save_btn";
-            save_btn.Size = new Size(94, 29);
-            save_btn.TabIndex = 7;
-            save_btn.Text = "Save";
-            save_btn.UseVisualStyleBackColor = true;
+            cancel_n.BackColor = Color.FromArgb(33, 8, 97);
+            cancel_n.FlatAppearance.MouseDownBackColor = Color.FromArgb(75, 8, 138);
+            cancel_n.FlatAppearance.MouseOverBackColor = Color.FromArgb(75, 8, 138);
+            cancel_n.FlatStyle = FlatStyle.Flat;
+            cancel_n.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cancel_n.ForeColor = Color.White;
+            cancel_n.Location = new Point(742, 15);
+            cancel_n.Name = "cancel_n";
+            cancel_n.Size = new Size(203, 40);
+            cancel_n.TabIndex = 14;
+            cancel_n.Text = "Cancel";
+            cancel_n.UseVisualStyleBackColor = false;
+            // 
+            // panel1
+            // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.Controls.Add(itemsToBeAdded_GV);
+            panel1.Location = new Point(0, 72);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1086, 538);
+            panel1.TabIndex = 15;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(cancel_n);
+            panel2.Controls.Add(save_n);
+            panel2.Dock = DockStyle.Bottom;
+            panel2.Location = new Point(0, 613);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1086, 107);
+            panel2.TabIndex = 16;
             // 
             // Add_Q
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel2);
+            Controls.Add(panel1);
             Controls.Add(searchBy_Combo);
             Controls.Add(search_txt);
             Controls.Add(search_btn);
-            Controls.Add(itemsToBeAdded_GV);
-            Controls.Add(cancel_btn);
-            Controls.Add(save_btn);
             Name = "Add_Q";
-            Size = new Size(1330, 802);
+            Size = new Size(1086, 720);
+            Load += Add_Q_Load;
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).EndInit();
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -119,5 +156,9 @@
         private DataGridView itemsToBeAdded_GV;
         private Button cancel_btn;
         private Button save_btn;
+        private Button save_n;
+        private Button cancel_n;
+        private Panel panel1;
+        private Panel panel2;
     }
 }

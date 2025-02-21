@@ -142,9 +142,10 @@
             // 
             // add_q1
             // 
-            add_q1.Location = new Point(218, 35);
+            add_q1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            add_q1.Location = new Point(226, 35);
             add_q1.Name = "add_q1";
-            add_q1.Size = new Size(1662, 1002);
+            add_q1.Size = new Size(1086, 720);
             add_q1.TabIndex = 2;
             // 
             // main_Form
