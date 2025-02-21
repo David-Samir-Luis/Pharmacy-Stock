@@ -54,10 +54,10 @@ namespace login_page
                 medicines_var = medicines_var.Where(n => (n.Quantity <= n.MinimumQuantity))
                 .ToList();
             }
-
+       
             if (ignoreZero_checkBox.Checked)
             {
-
+       
                 medicines_var = medicines_var.Where(n => n.Quantity != 0)
                 .ToList();
             }
@@ -65,8 +65,8 @@ namespace login_page
             {
                 // do Nothing
             }
-
-
+       
+       
             lowStock_GV.DataSource = medicines_var.Select(n => new
             {
                 Code = n.Code,
@@ -75,7 +75,7 @@ namespace login_page
                 MinimumQuantity = n.MinimumQuantity
             })
                 .ToList();
-
+       
         }
 
         private void LowStock_Form_Load(object sender, EventArgs e)

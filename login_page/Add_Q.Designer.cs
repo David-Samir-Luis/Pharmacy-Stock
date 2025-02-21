@@ -28,24 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            searchBy_label = new Label();
             searchBy_Combo = new ComboBox();
             search_txt = new TextBox();
             search_btn = new Button();
-            dataGridView1 = new DataGridView();
+            itemsToBeAdded_GV = new DataGridView();
             cancel_btn = new Button();
             save_btn = new Button();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             SuspendLayout();
-            // 
-            // searchBy_label
-            // 
-            searchBy_label.AutoSize = true;
-            searchBy_label.Location = new Point(1055, 167);
-            searchBy_label.Name = "searchBy_label";
-            searchBy_label.Size = new Size(73, 20);
-            searchBy_label.TabIndex = 13;
-            searchBy_label.Text = "Search By";
             // 
             // searchBy_Combo
             // 
@@ -64,6 +54,7 @@
             search_txt.Name = "search_txt";
             search_txt.Size = new Size(275, 27);
             search_txt.TabIndex = 11;
+            search_txt.KeyDown += search_txt_KeyDown;
             // 
             // search_btn
             // 
@@ -73,16 +64,18 @@
             search_btn.TabIndex = 10;
             search_btn.Text = "Search";
             search_btn.UseVisualStyleBackColor = true;
+            search_btn.Click += search_btn_Click;
             // 
-            // dataGridView1
+            // itemsToBeAdded_GV
             // 
-            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(45, 92);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.Size = new Size(823, 251);
-            dataGridView1.TabIndex = 9;
+            itemsToBeAdded_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            itemsToBeAdded_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            itemsToBeAdded_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            itemsToBeAdded_GV.Location = new Point(45, 92);
+            itemsToBeAdded_GV.Name = "itemsToBeAdded_GV";
+            itemsToBeAdded_GV.RowHeadersWidth = 51;
+            itemsToBeAdded_GV.Size = new Size(823, 251);
+            itemsToBeAdded_GV.TabIndex = 9;
             // 
             // cancel_btn
             // 
@@ -106,28 +99,24 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(searchBy_label);
             Controls.Add(searchBy_Combo);
             Controls.Add(search_txt);
             Controls.Add(search_btn);
-            Controls.Add(dataGridView1);
+            Controls.Add(itemsToBeAdded_GV);
             Controls.Add(cancel_btn);
             Controls.Add(save_btn);
             Name = "Add_Q";
             Size = new Size(1330, 802);
-            KeyDown += Add_Q_KeyDown;
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Label searchBy_label;
         private ComboBox searchBy_Combo;
         private TextBox search_txt;
         private Button search_btn;
-        private DataGridView dataGridView1;
+        private DataGridView itemsToBeAdded_GV;
         private Button cancel_btn;
         private Button save_btn;
     }
