@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using login_page.Models;
+using System.Linq.Expressions;
 namespace login_page
 {
     internal class DbServices
@@ -36,6 +37,12 @@ namespace login_page
         }
         public async Task LoadDataAsync<T>() where T : class
         {
+            // ensure that the class T is one of the classes in directory Model
+            // and NOT class PharmacyStoreContext
+            if ((typeof(T).Namespace != "login_page.Models")
+                && typeof(T) != typeof(PharmacyStoreContext))
+                return;
+
             using (var context = new PharmacyStoreContext())
             {
                 var data = await context.Set<T>().ToListAsync();
@@ -46,5 +53,27 @@ namespace login_page
         {
             return _dataCache.TryGetValue(typeof(T), out var data) ? (List<T>)data : new List<T>();
         }
+
+        //public async Task<int> BulkUpdateUsingQueryAsync<T>(List<object> keys, string fieldName, List<object> newValues) where T : class
+        //{
+        //    if (keys.Count != newValues.Count)
+        //        throw new ArgumentException("Keys and values list must have the same length.");
+
+        //    using (var context = new PharmacyStoreContext())
+        //    {
+        //        var dbSet = context.Set<T>();
+        //        int updatedRows = 0;
+
+        //        for (int i = 0; i < keys.Count; i++)
+        //        {
+        //            updatedRows += await dbSet
+        //                .Where(e => EF.Property<object>(e, "Id") == keys[i]) // Replace "Id" with actual PK name if different
+        //                .ExecuteUpdateAsync(setters => setters.SetProperty<Medicine>());
+        //        }
+
+        //        return updatedRows;
+        //    }
+        //}
+
     }
 }

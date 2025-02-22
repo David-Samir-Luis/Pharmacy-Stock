@@ -13,37 +13,46 @@ namespace login_page
 {
     public partial class Add_Q : UserControl
     {
+        public Add_Q()
+        {
+            InitializeComponent();
+            searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
+        }
         class MedicineGV
         {
             private Medicine medicine;
+            public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public string Code { get=>medicine.Code; }
-            public string? Barcode { get; }
-            public int Quantity { get => medicine.Quantity; }
+            public int QuantityToAdd { get; set; }
+            public int Stock { get => medicine.Quantity; }
 
+            //public string? Barcode { get; }
             //public DateOnly ExpiryDate { get; set; }
 
             //public int? MinimumQuantity { get; set; }
 
-            public int QuantityToAdd { get; set; }
-            public MedicineGV(Medicine m,int q)
+            public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
                 QuantityToAdd = q;
             }
-            public void updateQuantity()
+            public void UpdateQuantity()
             {
                 medicine.Quantity += QuantityToAdd;
             }
         }
 
         List<MedicineGV> itemsToBeAdded_ls = new();
-        public Add_Q()
-        {
-            InitializeComponent();
-            searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
-        }
 
+        void ResetPanel()
+        {
+            // Reset panel
+            search_txt.Text = "";
+            itemsToBeAdded_ls.Clear(); // clear the list 
+            // reset gridview 
+            itemsToBeAdded_GV.DataSource = null;
+            itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+        }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -69,6 +78,7 @@ namespace login_page
                 case "Barcode":
                     ///to do search by barcode 
                     item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode?.ToLower().Trim() == searchText).ToList();
+                    search_txt.Text="";
                     break;
                 case "Code":
                     ///to do search by code 
@@ -82,13 +92,17 @@ namespace login_page
 
             if (item?.Any() ?? false)
             {
-                itemsToBeAdded_ls.Add(new MedicineGV(item.First(),0));
+                itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
                 itemsToBeAdded_GV.DataSource = null;
                 itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+                //itemsToBeAdded_GV.RowsAdded += (object sender, EventArgs e) => ;
+                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+                itemsToBeAdded_GV.BeginEdit(true);
             }
             else
             {
                 MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                search_txt.Focus();
             }
             //MessageBox.Show(itemsToBeAdded_ls.Count.ToString());
         }
@@ -103,42 +117,50 @@ namespace login_page
             int x = (itemsToBeAdded_GV.Width - save_n.Width) / 3;
             save_n.Location = new Point(x, save_n.Location.Y);
             cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
-
         }
 
         private void save_n_Click(object sender, EventArgs e)
         {
-            //using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
-            //{
-            //    foreach (var item in itemsToBeAdded_ls)
-            //    {
-            //        var existingItem = db.Medicines.FirstOrDefault(m => m.Code == item.Code);
-            //        if (existingItem != null)
-            //        {
-            //            // Update the database entity with modified values
-            //            existingItem.Name = item.Name;
-            //            existingItem.Barcode = item.Barcode;
-            //            existingItem.Code = item.Code;
-            //            // Add other fields if needed
-            //        }
-            //    }
-
-            //    db.SaveChanges(); // Save changes to the database
-            //}
-            foreach (var item in itemsToBeAdded_ls)
+            using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
             {
-                item.updateQuantity();
+                foreach (var item in itemsToBeAdded_ls)
+                {
+                    var existingItem = db.Medicines.FirstOrDefault(m => m.Code == item.Code);
+                    if (existingItem != null)
+                    {
+                        // Update the database entity with modified values
+                        existingItem.Name = item.Name;
+                        existingItem.Code = item.Code;
+                        // Add other fields if needed
+                    }
+                }
+
+                db.SaveChanges(); // Save changes to the database
             }
 
-            // Reset panel
-            search_txt.Text = "";
-            itemsToBeAdded_ls.Clear(); // clear the list 
-            // reset gridview 
-            itemsToBeAdded_GV.DataSource=null;
-            itemsToBeAdded_GV.DataSource=itemsToBeAdded_ls;
+            foreach (var item in itemsToBeAdded_ls)
+            {
+                item.UpdateQuantity();
+            }
+
+            ResetPanel();
 
             MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+        }
+
+        private void cancel_n_Click(object sender, EventArgs e)
+        {
+            ResetPanel();
+        }
+
+        private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
+            {
+                search_txt.Text = "";
+                search_txt.Focus();
+            }
         }
     }
 }

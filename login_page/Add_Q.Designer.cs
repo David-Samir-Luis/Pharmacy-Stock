@@ -81,6 +81,7 @@
             itemsToBeAdded_GV.RowHeadersWidth = 51;
             itemsToBeAdded_GV.Size = new Size(958, 527);
             itemsToBeAdded_GV.TabIndex = 9;
+            itemsToBeAdded_GV.CellValueChanged += itemsToBeAdded_GV_CellValueChanged;
             // 
             // save_n
             // 
@@ -112,6 +113,7 @@
             cancel_n.TabIndex = 14;
             cancel_n.Text = "Cancel";
             cancel_n.UseVisualStyleBackColor = false;
+            cancel_n.Click += cancel_n_Click;
             // 
             // panel1
             // 
