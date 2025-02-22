@@ -77,6 +77,7 @@
             itemsToBeAdded_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             itemsToBeAdded_GV.Location = new Point(57, 8);
             itemsToBeAdded_GV.Name = "itemsToBeAdded_GV";
+            itemsToBeAdded_GV.RowHeadersVisible = false;
             itemsToBeAdded_GV.RowHeadersWidth = 51;
             itemsToBeAdded_GV.Size = new Size(958, 527);
             itemsToBeAdded_GV.TabIndex = 9;
@@ -95,6 +96,7 @@
             save_n.TabIndex = 13;
             save_n.Text = "Save";
             save_n.UseVisualStyleBackColor = false;
+            save_n.Click += save_n_Click;
             // 
             // cancel_n
             // 
