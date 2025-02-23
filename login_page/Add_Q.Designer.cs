@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             searchBy_Combo = new ComboBox();
             search_txt = new TextBox();
             search_btn = new Button();
@@ -35,7 +36,9 @@
             save_n = new Button();
             cancel_n = new Button();
             panel1 = new Panel();
+            resultContainer = new FlowLayoutPanel();
             panel2 = new Panel();
+            timer1 = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -46,7 +49,7 @@
             searchBy_Combo.DropDownStyle = ComboBoxStyle.DropDownList;
             searchBy_Combo.FormattingEnabled = true;
             searchBy_Combo.Items.AddRange(new object[] { "Barcode", "Code", "Name" });
-            searchBy_Combo.Location = new Point(486, 40);
+            searchBy_Combo.Location = new Point(482, 34);
             searchBy_Combo.Name = "searchBy_Combo";
             searchBy_Combo.Size = new Size(151, 28);
             searchBy_Combo.TabIndex = 12;
@@ -54,17 +57,20 @@
             // 
             // search_txt
             // 
-            search_txt.Location = new Point(183, 42);
+            search_txt.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            search_txt.Location = new Point(183, 34);
             search_txt.Name = "search_txt";
-            search_txt.Size = new Size(275, 27);
+            search_txt.Size = new Size(275, 31);
             search_txt.TabIndex = 11;
+            search_txt.TextChanged += search_txt_TextChanged;
             search_txt.KeyDown += search_txt_KeyDown;
             // 
             // search_btn
             // 
-            search_btn.Location = new Point(57, 40);
+            search_btn.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            search_btn.Location = new Point(57, 34);
             search_btn.Name = "search_btn";
-            search_btn.Size = new Size(94, 29);
+            search_btn.Size = new Size(120, 31);
             search_btn.TabIndex = 10;
             search_btn.Text = "Search";
             search_btn.UseVisualStyleBackColor = true;
@@ -124,6 +130,14 @@
             panel1.Size = new Size(1086, 538);
             panel1.TabIndex = 15;
             // 
+            // resultContainer
+            // 
+            resultContainer.BackColor = Color.White;
+            resultContainer.Location = new Point(183, 65);
+            resultContainer.Name = "resultContainer";
+            resultContainer.Size = new Size(275, 0);
+            resultContainer.TabIndex = 10;
+            // 
             // panel2
             // 
             panel2.Controls.Add(cancel_n);
@@ -134,10 +148,16 @@
             panel2.Size = new Size(1086, 107);
             panel2.TabIndex = 16;
             // 
+            // timer1
+            // 
+            timer1.Interval = 1;
+            timer1.Tick += timer1_Tick;
+            // 
             // Add_Q
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(resultContainer);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Controls.Add(searchBy_Combo);
@@ -164,5 +184,7 @@
         private Button cancel_n;
         private Panel panel1;
         private Panel panel2;
+        private FlowLayoutPanel resultContainer;
+        private System.Windows.Forms.Timer timer1;
     }
 }
