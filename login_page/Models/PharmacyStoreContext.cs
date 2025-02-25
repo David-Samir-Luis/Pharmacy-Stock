@@ -23,15 +23,17 @@ public partial class PharmacyStoreContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=Pharmacy_Store;Trusted_Connection=True;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-RTCLUQ8\\SQLEXPRESS02;Database=Pharmacy_Store;Trusted_Connection=True;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Medicine>(entity =>
         {
-            entity.HasKey(e => e.Code).HasName("PK__Medicine__A25C5AA6417BD379");
+            entity.HasKey(e => e.Code).HasName("PK__Medicine__A25C5AA68D804F76");
 
-            entity.HasIndex(e => e.Name, "UQ__Medicine__737584F61913056C").IsUnique();
+            entity.ToTable("Medicine");
+
+            entity.HasIndex(e => e.Name, "UQ__Medicine__737584F6968E14B4").IsUnique();
 
             entity.Property(e => e.Code)
                 .HasMaxLength(10)
@@ -48,7 +50,7 @@ public partial class PharmacyStoreContext : DbContext
 
         modelBuilder.Entity<OperationsHistory>(entity =>
         {
-            entity.HasKey(e => e.OperationId).HasName("PK__Operatio__D9469EE7645AB833");
+            entity.HasKey(e => e.OperationId).HasName("PK__Operatio__D9469EE74CDFD191");
 
             entity.ToTable("Operations_History");
 
@@ -60,12 +62,13 @@ public partial class PharmacyStoreContext : DbContext
             entity.Property(e => e.OperationType)
                 .HasMaxLength(3)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("Operation_type");
         });
 
         modelBuilder.Entity<OperationsMedicine>(entity =>
         {
-            entity.HasKey(e => new { e.OperationId, e.MedicineCode }).HasName("PK__Operatio__BDFD44D9F8BEEE18");
+            entity.HasKey(e => new { e.OperationId, e.MedicineCode }).HasName("PK__Operatio__BDFD44D9AE9AF4D9");
 
             entity.ToTable("Operations_medicines");
 
@@ -73,17 +76,16 @@ public partial class PharmacyStoreContext : DbContext
             entity.Property(e => e.MedicineCode)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValueSql("((0))")
+                .HasDefaultValue("0")
                 .HasColumnName("Medicine_code");
 
             entity.HasOne(d => d.MedicineCodeNavigation).WithMany(p => p.OperationsMedicines)
                 .HasForeignKey(d => d.MedicineCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Operation__Medic__5812160E");
+                .HasConstraintName("FK_OperationsMedicines_Medicine");
 
             entity.HasOne(d => d.Operation).WithMany(p => p.OperationsMedicines)
                 .HasForeignKey(d => d.OperationId)
-                .HasConstraintName("FK__Operation__Opera__571DF1D5");
+                .HasConstraintName("FK_OperationsMedicines_Operation");
         });
 
         OnModelCreatingPartial(modelBuilder);
