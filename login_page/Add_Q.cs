@@ -17,11 +17,12 @@ namespace login_page
     {
 
         List<Medicine> itemNames;
-        List<MedicineGV> itemsToBeAdded_ls = new();
+        BindingList<MedicineGV> itemsToBeAdded_ls = new();
         public Add_Q()
         {
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
+            itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
         {
@@ -55,8 +56,8 @@ namespace login_page
             search_txt.Text = "";
             itemsToBeAdded_ls.Clear(); // clear the list 
             // reset gridview 
-            itemsToBeAdded_GV.DataSource = null;
-            itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+            //itemsToBeAdded_GV.DataSource = null;
+            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -97,8 +98,8 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                itemsToBeAdded_GV.DataSource = null;
-                itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+                //itemsToBeAdded_GV.DataSource = null;
+                //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
                 //itemsToBeAdded_GV.RowsAdded += (object sender, EventArgs e) => ;
                 itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
                 itemsToBeAdded_GV.BeginEdit(true);
@@ -125,8 +126,8 @@ namespace login_page
                 if (itemsToBeAdded_ls.Count >= 0)
                 {
                     itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
-                    itemsToBeAdded_GV.DataSource = null;
-                    itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+                    //itemsToBeAdded_GV.DataSource = null;
+                    //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
                 }
             }
             if (keyData ==Keys.F1)
