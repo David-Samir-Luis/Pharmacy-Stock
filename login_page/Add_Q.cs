@@ -199,6 +199,8 @@ namespace login_page
 
         private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            MessageBox.Show(itemsToBeAdded_GV.CurrentCell.ToString());
+
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
                 search_txt.Text = "";
