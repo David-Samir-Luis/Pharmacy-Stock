@@ -119,28 +119,28 @@ namespace login_page
             }
          
         }
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData ==( Keys.Control | Keys.Delete))
-            {
-                if (itemsToBeAdded_ls.Count >= 0)
-                {
-                    itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
-                    //itemsToBeAdded_GV.DataSource = null;
-                    //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
-                }
-            }
-            if (keyData ==Keys.F1)
-            {
-                searchBy_Combo.SelectedIndex = 1;
-            } 
-            if (keyData ==Keys.Insert)
-            {
-                searchBy_Combo.SelectedIndex = 2;
-            }
-                search_txt.Focus();
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
+        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        //{
+        //    if (keyData ==( Keys.Control | Keys.Delete))
+        //    {
+        //        if (itemsToBeAdded_ls.Count >= 0)
+        //        {
+        //            itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
+        //            //itemsToBeAdded_GV.DataSource = null;
+        //            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+        //        }
+        //    }
+        //    if (keyData ==Keys.F1)
+        //    {
+        //        searchBy_Combo.SelectedIndex = 1;
+        //    } 
+        //    if (keyData ==Keys.Insert)
+        //    {
+        //        searchBy_Combo.SelectedIndex = 2;
+        //    }
+        //        search_txt.Focus();
+        //    return base.ProcessCmdKey(ref msg, keyData);
+        //}
 
         private void search_btn_Click(object sender, EventArgs e)
         {
