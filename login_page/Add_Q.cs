@@ -17,11 +17,12 @@ namespace login_page
     {
 
         List<Medicine> itemNames;
-        List<MedicineGV> itemsToBeAdded_ls = new();
+        BindingList<MedicineGV> itemsToBeAdded_ls = new();
         public Add_Q()
         {
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
+            itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
         {
@@ -54,8 +55,8 @@ namespace login_page
             search_txt.Text = "";
             itemsToBeAdded_ls.Clear(); // clear the list 
             // reset gridview 
-            itemsToBeAdded_GV.DataSource = null;
-            itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+            //itemsToBeAdded_GV.DataSource = null;
+            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -96,8 +97,8 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                itemsToBeAdded_GV.DataSource = null;
-                itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+                //itemsToBeAdded_GV.DataSource = null;
+                //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
                 //itemsToBeAdded_GV.RowsAdded += (object sender, EventArgs e) => ;
                 itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
                 itemsToBeAdded_GV.BeginEdit(true);
@@ -143,26 +144,28 @@ namespace login_page
                 itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
             }
         }
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData == (Keys.Control | Keys.Delete))
-            {
-                DeleteRow();
-            }
-
-            if (keyData == Keys.Insert)
-            {
-                searchBy_Combo.SelectedIndex = 1;
-            }
-
-            if (keyData == Keys.F1)
-            {
-                searchBy_Combo.SelectedIndex = 2;
-            }
-
-            search_txt.Focus();
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
+        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        //{
+        //    if (keyData ==( Keys.Control | Keys.Delete))
+        //    {
+        //        if (itemsToBeAdded_ls.Count >= 0)
+        //        {
+        //            itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
+        //            //itemsToBeAdded_GV.DataSource = null;
+        //            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+        //        }
+        //    }
+        //    if (keyData ==Keys.F1)
+        //    {
+        //        searchBy_Combo.SelectedIndex = 1;
+        //    } 
+        //    if (keyData ==Keys.Insert)
+        //    {
+        //        searchBy_Combo.SelectedIndex = 2;
+        //    }
+        //        search_txt.Focus();
+        //    return base.ProcessCmdKey(ref msg, keyData);
+        //}
 
         private void search_btn_Click(object sender, EventArgs e)
         {
@@ -221,6 +224,8 @@ namespace login_page
 
         private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            MessageBox.Show(itemsToBeAdded_GV.CurrentCell.ToString());
+
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
                 search_txt.Text = "";
