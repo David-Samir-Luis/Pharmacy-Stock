@@ -47,7 +47,6 @@ namespace login_page
             }
         }
 
-        
 
         void ResetPanel()
         {
@@ -116,28 +115,52 @@ namespace login_page
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }
-         
+
+        }
+        private void DeleteRow()
+        {
+            if (itemsToBeAdded_GV.Rows.Count == 0) return; // No rows to delete
+
+            int rowIndex = -1;
+
+            // Check if any cell is selected
+            if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            {
+                rowIndex = itemsToBeAdded_GV.SelectedCells[0].RowIndex; // Get row index of selected cell
+            }
+            else if (itemsToBeAdded_GV.SelectedRows.Count > 0)
+            {
+                rowIndex = itemsToBeAdded_GV.SelectedRows[0].Index; // Get row index of selected row
+            }
+            else
+            {
+                rowIndex = itemsToBeAdded_GV.Rows.Count - 1; // No selection, delete last row
+            }
+            if (rowIndex >= 0 && rowIndex < itemsToBeAdded_GV.Rows.Count)
+            {
+                itemsToBeAdded_ls.RemoveAt(rowIndex); // Delete row
+                itemsToBeAdded_GV.DataSource = null;
+                itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+            }
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData ==( Keys.Control | Keys.Delete))
+            if (keyData == (Keys.Control | Keys.Delete))
             {
-                if (itemsToBeAdded_ls.Count >= 0)
-                {
-                    itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
-                    itemsToBeAdded_GV.DataSource = null;
-                    itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
-                }
+                DeleteRow();
             }
-            if (keyData ==Keys.F1)
+
+            if (keyData == Keys.Insert)
             {
                 searchBy_Combo.SelectedIndex = 1;
-            } 
-            if (keyData ==Keys.Insert)
+            }
+
+            if (keyData == Keys.F1)
             {
                 searchBy_Combo.SelectedIndex = 2;
             }
-                search_txt.Focus();
+
+            search_txt.Focus();
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -254,13 +277,26 @@ namespace login_page
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (NameitemControl.doubleClicked==true)
+            if (NameitemControl.doubleClicked == true)
             {
                 searchGeneral(NameitemControl.selectedName.ToLower().Trim());
                 NameitemControl.doubleClicked = false;
-                search_txt.Text ="";
+                search_txt.Text = "";
                 resultContainer.Height = 0;
             }
+        }
+
+        private void deleteToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DeleteRow();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString()??"";
+            Edit_Drug editDrug = new();
+            editDrug.Name = searchedName;
+            editDrug.ShowDialog();
         }
     }
 }
