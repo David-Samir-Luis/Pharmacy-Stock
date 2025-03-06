@@ -21,10 +21,6 @@ namespace login_page
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
         public void Details(Medicine m)
         {
             lbname.Text = m.Name;
@@ -38,7 +34,7 @@ namespace login_page
 
         private void NameitemControl_MouseHover(object sender, EventArgs e)
         {
-            this.BackColor = Color.WhiteSmoke;
+            this.BackColor = Color.Silver;
         }
 
         private void NameitemControl_MouseLeave(object sender, EventArgs e)
@@ -48,7 +44,7 @@ namespace login_page
 
         private void lbname_MouseHover(object sender, EventArgs e)
         {
-            this.BackColor = Color.WhiteSmoke;
+            this.BackColor = Color.Silver;
         }
 
         private void lbname_MouseLeave(object sender, EventArgs e)
@@ -59,7 +55,23 @@ namespace login_page
         private void lbname_DoubleClick(object sender, EventArgs e)
         {
             doubleClicked = true;
-            selectedName=lbname.Text;
+            selectedName = lbname.Text;
+        }
+
+        private void panel1_MouseHover(object sender, EventArgs e)
+        {
+            this.BackColor = Color.Silver;
+        }
+
+        private void panel1_MouseLeave(object sender, EventArgs e)
+        {
+            this.BackColor = Color.White;
+        }
+
+        private void panel1_DoubleClick(object sender, EventArgs e)
+        {
+            doubleClicked = true;
+            selectedName = lbname.Text;
         }
     }
 }

@@ -299,9 +299,13 @@ namespace login_page
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString()??"";
-            Edit_Drug editDrug = new(searchedName);
-            editDrug.ShowDialog();
+            if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            {
+                string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString() ?? "";
+                Edit_Drug editDrug = new(searchedName);
+                editDrug.ShowDialog();
+            }
+            
         }
     }
 }
