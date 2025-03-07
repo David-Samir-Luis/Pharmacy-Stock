@@ -27,7 +27,7 @@ namespace login_page
                 }
             }
         }
-        public async void LoadAllDataAsync()
+        public async Task LoadAllDataAsync()
         {
             await Task.WhenAll(
                   Instance.LoadDataAsync<Medicine>(),

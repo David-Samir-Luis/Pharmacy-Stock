@@ -197,7 +197,24 @@ namespace login_page
                 }
             }
         }
-
+        private async Task AddNewRowInOperationHistoryAsync()
+        {
+            using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
+            {
+                db.OperationsHistories.Add(new OperationsHistory
+                {
+                    OperationTime = DateTime.Now,
+                    OperationType = "IN",
+                    //OperationDetails = "Add Quantity to Medicine",
+                    OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
+                    {
+                        MedicineCode = m.Code,
+                        Quantity = (short)m.QuantityToAdd
+                    }).ToList()
+                });
+                await db.SaveChangesAsync();
+            }
+        }
         private async void save_n_Click(object sender, EventArgs e)
         {
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
@@ -210,8 +227,9 @@ namespace login_page
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
-                await UpdateQuantityUsingQueryAsync(); // save changes to database using bulk update
-                await DbServices.Instance.LoadDataAsync<Medicine>(); // reload data
+                await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
+                await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
+                await DbServices.Instance.LoadAllDataAsync(); // reload data
                 ResetPanel();
             }
             else
