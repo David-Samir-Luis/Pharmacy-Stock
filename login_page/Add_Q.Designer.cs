@@ -87,6 +87,7 @@
             itemsToBeAdded_GV.RowHeadersWidth = 51;
             itemsToBeAdded_GV.Size = new Size(958, 527);
             itemsToBeAdded_GV.TabIndex = 9;
+            itemsToBeAdded_GV.CellValidating += itemsToBeAdded_GV_CellValidating;
             itemsToBeAdded_GV.CellValueChanged += itemsToBeAdded_GV_CellValueChanged;
             // 
             // save_n

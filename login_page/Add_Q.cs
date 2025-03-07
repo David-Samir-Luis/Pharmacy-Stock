@@ -1,4 +1,6 @@
 ﻿using login_page.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,7 +50,7 @@ namespace login_page
             }
         }
 
-        
+
 
         void ResetPanel()
         {
@@ -98,9 +100,6 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                //itemsToBeAdded_GV.DataSource = null;
-                //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
-                //itemsToBeAdded_GV.RowsAdded += (object sender, EventArgs e) => ;
                 itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
                 itemsToBeAdded_GV.BeginEdit(true);
             }
@@ -109,7 +108,6 @@ namespace login_page
                 MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 search_txt.Focus();
             }
-            //MessageBox.Show(itemsToBeAdded_ls.Count.ToString());
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
         {
@@ -117,11 +115,12 @@ namespace login_page
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }
-         
+
         }
+        /* this method causes the gridview to be uneditable */
         //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         //{
-        //    if (keyData ==( Keys.Control | Keys.Delete))
+        //    if (keyData == (Keys.Control | Keys.Delete))
         //    {
         //        if (itemsToBeAdded_ls.Count >= 0)
         //        {
@@ -130,15 +129,15 @@ namespace login_page
         //            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         //        }
         //    }
-        //    if (keyData ==Keys.F1)
+        //    if (keyData == Keys.F1)
         //    {
         //        searchBy_Combo.SelectedIndex = 1;
-        //    } 
-        //    if (keyData ==Keys.Insert)
+        //    }
+        //    if (keyData == Keys.Insert)
         //    {
         //        searchBy_Combo.SelectedIndex = 2;
         //    }
-        //        search_txt.Focus();
+        //    search_txt.Focus();
         //    return base.ProcessCmdKey(ref msg, keyData);
         //}
 
@@ -162,34 +161,40 @@ namespace login_page
             cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
         }
 
-        private void save_n_Click(object sender, EventArgs e)
+        private async Task UpdateQuantityUsingQueryAsync()
         {
             using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
             {
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    var existingItem = db.Medicines.FirstOrDefault(m => m.Code == item.Code);
-                    if (existingItem != null)
-                    {
-                        // Update the database entity with modified values
-                        existingItem.Name = item.Name;
-                        existingItem.Code = item.Code;
-                        // Add other fields if needed
-                    }
+                    await db.Medicines
+                        .Where(m => m.Code ==item.Code)
+                        .ExecuteUpdateAsync(setters =>
+                        setters.SetProperty(m => m.Quantity, item.Stock));
+                }
+            }
+        }
+
+        private async void save_n_Click(object sender, EventArgs e)
+        {
+            if (!itemsToBeAdded_ls.IsNullOrEmpty())
+            {
+           
+                foreach (var item in itemsToBeAdded_ls)
+                {
+                    item.UpdateQuantity();
                 }
 
-                db.SaveChanges(); // Save changes to the database
+                MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                await UpdateQuantityUsingQueryAsync(); // save changes to database using bulk update
+                await DbServices.Instance.LoadDataAsync<Medicine>(); // reload data
+                ResetPanel();
             }
-
-            foreach (var item in itemsToBeAdded_ls)
+            else
             {
-                item.UpdateQuantity();
+                MessageBox.Show("NO items to be saved.", "Can't save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-            ResetPanel();
-
-            MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
         }
 
         private void cancel_n_Click(object sender, EventArgs e)
@@ -199,8 +204,6 @@ namespace login_page
 
         private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            MessageBox.Show(itemsToBeAdded_GV.CurrentCell.ToString());
-
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
                 search_txt.Text = "";
@@ -257,12 +260,28 @@ namespace login_page
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (NameitemControl.doubleClicked==true)
+            if (NameitemControl.doubleClicked == true)
             {
                 searchGeneral(NameitemControl.selectedName.ToLower().Trim());
                 NameitemControl.doubleClicked = false;
-                search_txt.Text ="";
+                search_txt.Text = "";
                 resultContainer.Height = 0;
+            }
+        }
+
+        private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            // Check if the column should allow only numbers (optional)
+            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "QuantityToAdd")
+            {
+                if (!string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
+                {
+                    if (!int.TryParse(e.FormattedValue.ToString(), out int number) || number < 0)
+                    {
+                        MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    }
+                }
             }
         }
     }
