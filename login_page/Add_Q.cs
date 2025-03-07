@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace login_page
 {
@@ -24,6 +25,7 @@ namespace login_page
         {
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
+            StockOperationType.SelectedIndex = 0; // default is Stock Out 
             itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
@@ -204,7 +206,7 @@ namespace login_page
                 db.OperationsHistories.Add(new OperationsHistory
                 {
                     OperationTime = DateTime.Now,
-                    OperationType = "IN",
+                    OperationType = StockOperationType?.SelectedItem?.ToString()?? "Stock Out",
                     //OperationDetails = "Add Quantity to Medicine",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {

@@ -42,6 +42,7 @@
             resultContainer = new FlowLayoutPanel();
             panel2 = new Panel();
             timer1 = new System.Windows.Forms.Timer(components);
+            StockOperationType = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
@@ -101,19 +102,19 @@
             contextMenuStrip1.ImageScalingSize = new Size(20, 20);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { deleteToolStripMenuItem, deleteToolStripMenuItem1 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(211, 88);
+            contextMenuStrip1.Size = new Size(130, 60);
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(210, 28);
+            deleteToolStripMenuItem.Size = new Size(129, 28);
             deleteToolStripMenuItem.Text = "Edit";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem1
             // 
             deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            deleteToolStripMenuItem1.Size = new Size(210, 28);
+            deleteToolStripMenuItem1.Size = new Size(129, 28);
             deleteToolStripMenuItem1.Text = "Delete";
             deleteToolStripMenuItem1.Click += deleteToolStripMenuItem1_Click;
             // 
@@ -181,10 +182,21 @@
             timer1.Interval = 1;
             timer1.Tick += timer1_Tick;
             // 
+            // StockOperationType
+            // 
+            StockOperationType.DropDownStyle = ComboBoxStyle.DropDownList;
+            StockOperationType.FormattingEnabled = true;
+            StockOperationType.Items.AddRange(new object[] { "Stock Out", "Stock In" });
+            StockOperationType.Location = new Point(757, 28);
+            StockOperationType.Name = "StockOperationType";
+            StockOperationType.Size = new Size(151, 28);
+            StockOperationType.TabIndex = 17;
+            // 
             // Add_Q
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(StockOperationType);
             Controls.Add(resultContainer);
             Controls.Add(panel2);
             Controls.Add(panel1);
@@ -218,5 +230,6 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem1;
+        private ComboBox StockOperationType;
     }
 }
