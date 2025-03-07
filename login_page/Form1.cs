@@ -11,6 +11,7 @@ namespace login_page
 
         private void checkBox_CheckedChanged(object sender, EventArgs e)
         {
+
             pass_txt.PasswordChar = checkBox.Checked ? '\0' : '*';
         }
 

@@ -50,8 +50,6 @@ namespace login_page
             }
         }
 
-
-
         void ResetPanel()
         {
             // Reset panel
@@ -115,7 +113,32 @@ namespace login_page
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }
+        }
+        private void DeleteRow()
+        {
+            if (itemsToBeAdded_GV.Rows.Count == 0) return; // No rows to delete
 
+            int rowIndex = -1;
+
+            // Check if any cell is selected
+            if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            {
+                rowIndex = itemsToBeAdded_GV.SelectedCells[0].RowIndex; // Get row index of selected cell
+            }
+            else if (itemsToBeAdded_GV.SelectedRows.Count > 0)
+            {
+                rowIndex = itemsToBeAdded_GV.SelectedRows[0].Index; // Get row index of selected row
+            }
+            else
+            {
+                rowIndex = itemsToBeAdded_GV.Rows.Count - 1; // No selection, delete last row
+            }
+            if (rowIndex >= 0 && rowIndex < itemsToBeAdded_GV.Rows.Count)
+            {
+                itemsToBeAdded_ls.RemoveAt(rowIndex); // Delete row
+                itemsToBeAdded_GV.DataSource = null;
+                itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+            }
         }
         /* this method causes the gridview to be uneditable */
         //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -269,6 +292,7 @@ namespace login_page
             }
         }
 
+
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
@@ -283,6 +307,18 @@ namespace login_page
                     }
                 }
             }
+        }
+        private void deleteToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DeleteRow();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString()??"";
+            Edit_Drug editDrug = new();
+            editDrug.Name = searchedName;
+            editDrug.ShowDialog();
         }
     }
 }
