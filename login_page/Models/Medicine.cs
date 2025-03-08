@@ -17,5 +17,7 @@ public partial class Medicine
 
     public string? Barcode { get; set; }
 
+    public int? Price { get; set; }
+
     public virtual ICollection<OperationsMedicine> OperationsMedicines { get; set; } = new List<OperationsMedicine>();
 }
