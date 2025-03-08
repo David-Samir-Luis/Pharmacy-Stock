@@ -19,6 +19,11 @@ namespace login_page
             InitializeComponent();
             searchText = "";
         }
+        public Edit_Drug(string searchTxt)
+        {
+            InitializeComponent();
+            searchText = searchTxt;
+        }
 
 
         private void Name_txt_KeyDown(object sender, KeyEventArgs e)
@@ -85,6 +90,12 @@ namespace login_page
 
         }
 
-       
+        private void MinQuantity_txt_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                save_n.Focus();
+            }
+        }
     }
 }

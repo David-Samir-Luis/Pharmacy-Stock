@@ -156,6 +156,7 @@
             MinQuantity_txt.Name = "MinQuantity_txt";
             MinQuantity_txt.Size = new Size(293, 30);
             MinQuantity_txt.TabIndex = 18;
+            MinQuantity_txt.KeyDown += MinQuantity_txt_KeyDown;
             // 
             // label1
             // 

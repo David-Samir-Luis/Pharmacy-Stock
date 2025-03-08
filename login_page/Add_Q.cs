@@ -57,6 +57,7 @@ namespace login_page
             // Reset panel
             search_txt.Text = "";
             itemsToBeAdded_ls.Clear(); // clear the list 
+            search_txt.Focus();
             // reset gridview 
             //itemsToBeAdded_GV.DataSource = null;
             //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
@@ -142,29 +143,30 @@ namespace login_page
                 itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
             }
         }
-        /* this method causes the gridview to be uneditable */
-        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        //{
-        //    if (keyData == (Keys.Control | Keys.Delete))
-        //    {
-        //        if (itemsToBeAdded_ls.Count >= 0)
-        //        {
-        //            itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
-        //            //itemsToBeAdded_GV.DataSource = null;
-        //            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
-        //        }
-        //    }
-        //    if (keyData == Keys.F1)
-        //    {
-        //        searchBy_Combo.SelectedIndex = 1;
-        //    }
-        //    if (keyData == Keys.Insert)
-        //    {
-        //        searchBy_Combo.SelectedIndex = 2;
-        //    }
-        //    search_txt.Focus();
-        //    return base.ProcessCmdKey(ref msg, keyData);
-        //}
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.Delete))
+            {
+                DeleteRow();
+                //if (itemsToBeAdded_ls.Count >= 0)
+                //{
+                //    itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
+                //    itemsToBeAdded_GV.DataSource = null;
+                //    itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
+                //}
+            }
+            if (keyData == Keys.Insert)
+            {
+                searchBy_Combo.SelectedIndex = 1;
+            }
+            if (keyData == Keys.F1)
+            {
+                searchBy_Combo.SelectedIndex = 2;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
 
         private void search_btn_Click(object sender, EventArgs e)
         {
@@ -247,6 +249,7 @@ namespace login_page
 
         private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
                 search_txt.Text = "";
@@ -335,10 +338,13 @@ namespace login_page
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString()??"";
-            Edit_Drug editDrug = new();
-            editDrug.Name = searchedName;
-            editDrug.ShowDialog();
+            if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            {
+                string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString() ?? "";
+                Edit_Drug editDrug = new(searchedName);
+                editDrug.ShowDialog();
+            }
+            
         }
     }
 }
