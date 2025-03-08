@@ -1,4 +1,6 @@
 ﻿using login_page.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace login_page
 {
@@ -22,6 +25,7 @@ namespace login_page
         {
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
+            StockOperationType.SelectedIndex = 0; // default is Stock Out 
             itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
@@ -47,7 +51,6 @@ namespace login_page
                 medicine.Quantity += QuantityToAdd;
             }
         }
-
 
         void ResetPanel()
         {
@@ -98,9 +101,6 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                //itemsToBeAdded_GV.DataSource = null;
-                //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
-                //itemsToBeAdded_GV.RowsAdded += (object sender, EventArgs e) => ;
                 itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
                 itemsToBeAdded_GV.BeginEdit(true);
             }
@@ -109,7 +109,6 @@ namespace login_page
                 MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 search_txt.Focus();
             }
-            //MessageBox.Show(itemsToBeAdded_ls.Count.ToString());
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
         {
@@ -117,7 +116,6 @@ namespace login_page
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }
-
         }
         private void DeleteRow()
         {
@@ -145,6 +143,7 @@ namespace login_page
                 itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
             }
         }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == (Keys.Control | Keys.Delete))
@@ -168,6 +167,7 @@ namespace login_page
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+
         private void search_btn_Click(object sender, EventArgs e)
         {
             if (searchBy_Combo?.SelectedItem?.ToString() != "Name")
@@ -188,34 +188,58 @@ namespace login_page
             cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
         }
 
-        private void save_n_Click(object sender, EventArgs e)
+        private async Task UpdateQuantityUsingQueryAsync()
         {
             using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
             {
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    var existingItem = db.Medicines.FirstOrDefault(m => m.Code == item.Code);
-                    if (existingItem != null)
+                    await db.Medicines
+                        .Where(m => m.Code ==item.Code)
+                        .ExecuteUpdateAsync(setters =>
+                        setters.SetProperty(m => m.Quantity, item.Stock));
+                }
+            }
+        }
+        private async Task AddNewRowInOperationHistoryAsync()
+        {
+            using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
+            {
+                db.OperationsHistories.Add(new OperationsHistory
+                {
+                    OperationTime = DateTime.Now,
+                    OperationType = StockOperationType?.SelectedItem?.ToString()?? "Stock Out",
+                    //OperationDetails = "Add Quantity to Medicine",
+                    OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
-                        // Update the database entity with modified values
-                        existingItem.Name = item.Name;
-                        existingItem.Code = item.Code;
-                        // Add other fields if needed
-                    }
+                        MedicineCode = m.Code,
+                        Quantity = (short)m.QuantityToAdd
+                    }).ToList()
+                });
+                await db.SaveChangesAsync();
+            }
+        }
+        private async void save_n_Click(object sender, EventArgs e)
+        {
+            if (!itemsToBeAdded_ls.IsNullOrEmpty())
+            {
+           
+                foreach (var item in itemsToBeAdded_ls)
+                {
+                    item.UpdateQuantity();
                 }
 
-                db.SaveChanges(); // Save changes to the database
+                MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
+                await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
+                await DbServices.Instance.LoadAllDataAsync(); // reload data
+                ResetPanel();
             }
-
-            foreach (var item in itemsToBeAdded_ls)
+            else
             {
-                item.UpdateQuantity();
+                MessageBox.Show("NO items to be saved.", "Can't save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-            ResetPanel();
-
-            MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
         }
 
         private void cancel_n_Click(object sender, EventArgs e)
@@ -225,7 +249,6 @@ namespace login_page
 
         private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            //MessageBox.Show(itemsToBeAdded_GV.CurrentCell.ToString());
 
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
@@ -292,6 +315,22 @@ namespace login_page
             }
         }
 
+
+        private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            // Check if the column should allow only numbers (optional)
+            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "QuantityToAdd")
+            {
+                if (!string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
+                {
+                    if (!int.TryParse(e.FormattedValue.ToString(), out int number) || number < 0)
+                    {
+                        MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    }
+                }
+            }
+        }
         private void deleteToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             DeleteRow();

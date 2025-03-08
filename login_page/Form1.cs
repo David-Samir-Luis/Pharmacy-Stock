@@ -54,9 +54,9 @@ namespace login_page
             }
         }
 
-        private void login_form_Load(object sender, EventArgs e)
+        private async void login_form_Load(object sender, EventArgs e)
         {
-            DbServices.Instance.LoadAllDataAsync();
+             await DbServices.Instance.LoadAllDataAsync();
         }
     }
 }

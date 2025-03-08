@@ -27,7 +27,7 @@ namespace login_page
                 }
             }
         }
-        public async void LoadAllDataAsync()
+        public async Task LoadAllDataAsync()
         {
             await Task.WhenAll(
                   Instance.LoadDataAsync<Medicine>(),
@@ -54,24 +54,22 @@ namespace login_page
             return _dataCache.TryGetValue(typeof(T), out var data) ? (List<T>)data : new List<T>();
         }
 
-        //public async Task<int> BulkUpdateUsingQueryAsync<T>(List<object> keys, string fieldName, List<object> newValues) where T : class
+        //public async Task BulkUpdateUsingQueryAsync<Ttable, Tvalue>(List<Ttable> table ,Func<Ttable,bool> condition,Func<Ttable,Tvalue> setprop) where Ttable : class
         //{
-        //    if (keys.Count != newValues.Count)
-        //        throw new ArgumentException("Keys and values list must have the same length.");
-
+        //    if ((typeof(Ttable).Namespace != "login_page.Models")
+        //        && typeof(Ttable) != typeof(PharmacyStoreContext))
+        //        throw new Exception("Ttable must be database entity classes");
+        
         //    using (var context = new PharmacyStoreContext())
         //    {
-        //        var dbSet = context.Set<T>();
-        //        int updatedRows = 0;
+        //        var dbSet = context.Set<Ttable>();
 
-        //        for (int i = 0; i < keys.Count; i++)
+        //        for (int i = 0; i < table.Count; i++)
         //        {
-        //            updatedRows += await dbSet
-        //                .Where(e => EF.Property<object>(e, "Id") == keys[i]) // Replace "Id" with actual PK name if different
-        //                .ExecuteUpdateAsync(setters => setters.SetProperty<Medicine>());
-        //        }
+        //            await dbSet.Where(e => condition.Invoke(table[i]) == true)
+        //            .ExecuteUpdateAsync(setters => setters.SetProperty(e => EF.Property<Tvalue>(e, fieldName), newValue));
 
-        //        return updatedRows;
+        //        }
         //    }
         //}
 
