@@ -90,7 +90,7 @@
             dataGridViewCellStyle1.BackColor = Color.FromArgb(33, 11, 97);
             dataGridViewCellStyle1.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(33, 11, 97);
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
@@ -101,6 +101,7 @@
             itemsToBeAdded_GV.Name = "itemsToBeAdded_GV";
             itemsToBeAdded_GV.RowHeadersVisible = false;
             itemsToBeAdded_GV.RowHeadersWidth = 51;
+            itemsToBeAdded_GV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             itemsToBeAdded_GV.Size = new Size(958, 527);
             itemsToBeAdded_GV.TabIndex = 9;
             itemsToBeAdded_GV.CellValidating += itemsToBeAdded_GV_CellValidating;

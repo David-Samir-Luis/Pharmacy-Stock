@@ -19,5 +19,7 @@ public partial class Medicine
 
     public int? Price { get; set; }
 
+    public int Id { get; set; }
+
     public virtual ICollection<OperationsMedicine> OperationsMedicines { get; set; } = new List<OperationsMedicine>();
 }
