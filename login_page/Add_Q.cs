@@ -8,6 +8,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -33,9 +35,9 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int QuantityToAdd { get; set; }
+            public int InOut_Quantity { get; set; }
             public int Stock { get => medicine.Quantity; }
-
+            public int? Price { get => medicine.Price; }
             //public string? Barcode { get; }
             //public DateOnly ExpiryDate { get; set; }
 
@@ -44,11 +46,22 @@ namespace login_page
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
-                QuantityToAdd = q;
+                InOut_Quantity = q;
             }
-            public void UpdateQuantity()
+            public int GetID()
             {
-                medicine.Quantity += QuantityToAdd;
+                return medicine.Id;
+            }
+            public void UpdateQuantity(string OpType )
+            {
+                if (OpType== "Stock In")
+                {
+                    medicine.Quantity += InOut_Quantity;  
+                }
+                else
+                {
+                    medicine.Quantity -= InOut_Quantity;
+                }
             }
         }
 
@@ -119,17 +132,16 @@ namespace login_page
         }
         private void DeleteRow()
         {
-            if (itemsToBeAdded_GV.Rows.Count == 0) return; // No rows to delete
-           // if (itemsToBeAdded_ls.Count == 0) return; // No rows to delete
-
+            if (itemsToBeAdded_GV?.Rows?.Count == 0) return; // No rows to delete
+                                                             // if (itemsToBeAdded_ls.Count == 0) return; // No rows to delete
             int rowIndex = -1;
 
             // Check if any cell is selected
-            if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            if (itemsToBeAdded_GV?.SelectedCells?.Count > 0)
             {
                 rowIndex = itemsToBeAdded_GV.SelectedCells[0].RowIndex; // Get row index of selected cell
             }
-            else if (itemsToBeAdded_GV.SelectedRows.Count > 0)
+            else if (itemsToBeAdded_GV?.SelectedRows?.Count > 0)
             {
                 rowIndex = itemsToBeAdded_GV.SelectedRows[0].Index; // Get row index of selected row
             }
@@ -140,8 +152,6 @@ namespace login_page
             if (rowIndex >= 0 && rowIndex < itemsToBeAdded_GV.Rows.Count)
             {
                 itemsToBeAdded_ls.RemoveAt(rowIndex); // Delete row
-                itemsToBeAdded_GV.DataSource = null;
-                itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
             }
         }
 
@@ -191,7 +201,7 @@ namespace login_page
 
         private async Task UpdateQuantityUsingQueryAsync()
         {
-            using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
+            using (var db = new PharmacyStoreContext()) 
             {
                 foreach (var item in itemsToBeAdded_ls)
                 {
@@ -204,7 +214,7 @@ namespace login_page
         }
         private async Task AddNewRowInOperationHistoryAsync()
         {
-            using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
+            using (var db = new PharmacyStoreContext()) 
             {
                 db.OperationsHistories.Add(new OperationsHistory
                 {
@@ -213,8 +223,8 @@ namespace login_page
                     //OperationDetails = "Add Quantity to Medicine",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
-                        MedicineCode = m.Code,
-                        Quantity = (short)m.QuantityToAdd
+                        MedicineId = m.GetID(),
+                        Quantity = (short)m.InOut_Quantity
                     }).ToList()
                 });
                 await db.SaveChangesAsync();
@@ -223,18 +233,18 @@ namespace login_page
         private async void save_n_Click(object sender, EventArgs e)
         {
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
-            {
-           
+            {        
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    item.UpdateQuantity();
+                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString()?? "Stock In");
                 }
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
                 await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
-                await DbServices.Instance.LoadAllDataAsync(); // reload data
+                await DbServices.Instance.LoadDataAsync<OperationsHistory>(); // reload OperationsHistory data 
+                await DbServices.Instance.LoadDataAsync<OperationsMedicine>(); // reload OperationsMedicine data
                 ResetPanel();
             }
             else
@@ -320,7 +330,7 @@ namespace login_page
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "QuantityToAdd")
+            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
             {
                 if (!string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
                 {

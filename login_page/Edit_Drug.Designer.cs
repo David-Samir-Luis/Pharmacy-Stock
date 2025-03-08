@@ -148,6 +148,7 @@
             save_n.TabIndex = 15;
             save_n.Text = "Save";
             save_n.UseVisualStyleBackColor = false;
+            save_n.Click += save_n_Click;
             // 
             // MinQuantity_txt
             // 
