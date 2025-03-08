@@ -43,6 +43,7 @@
             resultContainer = new FlowLayoutPanel();
             panel2 = new Panel();
             timer1 = new System.Windows.Forms.Timer(components);
+            StockOperationType = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
@@ -102,6 +103,7 @@
             itemsToBeAdded_GV.RowHeadersWidth = 51;
             itemsToBeAdded_GV.Size = new Size(958, 527);
             itemsToBeAdded_GV.TabIndex = 9;
+            itemsToBeAdded_GV.CellValidating += itemsToBeAdded_GV_CellValidating;
             itemsToBeAdded_GV.CellValueChanged += itemsToBeAdded_GV_CellValueChanged;
             // 
             // contextMenuStrip1
@@ -190,10 +192,21 @@
             timer1.Interval = 1;
             timer1.Tick += timer1_Tick;
             // 
+            // StockOperationType
+            // 
+            StockOperationType.DropDownStyle = ComboBoxStyle.DropDownList;
+            StockOperationType.FormattingEnabled = true;
+            StockOperationType.Items.AddRange(new object[] { "Stock Out", "Stock In" });
+            StockOperationType.Location = new Point(757, 28);
+            StockOperationType.Name = "StockOperationType";
+            StockOperationType.Size = new Size(151, 28);
+            StockOperationType.TabIndex = 17;
+            // 
             // Add_Q
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(StockOperationType);
             Controls.Add(resultContainer);
             Controls.Add(panel2);
             Controls.Add(panel1);
@@ -227,5 +240,6 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem1;
+        private ComboBox StockOperationType;
     }
 }
