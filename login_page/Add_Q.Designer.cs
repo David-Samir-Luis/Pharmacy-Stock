@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             searchBy_Combo = new ComboBox();
             search_txt = new TextBox();
             search_btn = new Button();
@@ -84,8 +85,17 @@
             // 
             itemsToBeAdded_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             itemsToBeAdded_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(33, 11, 97);
+            dataGridViewCellStyle1.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             itemsToBeAdded_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             itemsToBeAdded_GV.ContextMenuStrip = contextMenuStrip1;
+            itemsToBeAdded_GV.EnableHeadersVisualStyles = false;
             itemsToBeAdded_GV.Location = new Point(57, 8);
             itemsToBeAdded_GV.Name = "itemsToBeAdded_GV";
             itemsToBeAdded_GV.RowHeadersVisible = false;
@@ -100,19 +110,19 @@
             contextMenuStrip1.ImageScalingSize = new Size(20, 20);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { deleteToolStripMenuItem, deleteToolStripMenuItem1 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(211, 88);
+            contextMenuStrip1.Size = new Size(130, 60);
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(210, 28);
+            deleteToolStripMenuItem.Size = new Size(129, 28);
             deleteToolStripMenuItem.Text = "Edit";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem1
             // 
             deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            deleteToolStripMenuItem1.Size = new Size(210, 28);
+            deleteToolStripMenuItem1.Size = new Size(129, 28);
             deleteToolStripMenuItem1.Text = "Delete";
             deleteToolStripMenuItem1.Click += deleteToolStripMenuItem1_Click;
             // 
