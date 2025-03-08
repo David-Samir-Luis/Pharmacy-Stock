@@ -87,7 +87,7 @@ namespace login_page
                     break;
                 case "Code":
                     ///to do search by code 
-                    item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code.ToLower().Trim() == searchText).ToList();
+                    item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code?.ToLower().Trim() == searchText).ToList();
                     break;
                 default:
                     MessageBox.Show("Please select a valid search type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -122,6 +122,7 @@ namespace login_page
         private void DeleteRow()
         {
             if (itemsToBeAdded_GV.Rows.Count == 0) return; // No rows to delete
+           // if (itemsToBeAdded_ls.Count == 0) return; // No rows to delete
 
             int rowIndex = -1;
 
@@ -305,7 +306,7 @@ namespace login_page
                 Edit_Drug editDrug = new(searchedName);
                 editDrug.ShowDialog();
             }
-            
+
         }
     }
 }
