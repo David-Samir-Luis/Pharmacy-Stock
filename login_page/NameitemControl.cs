@@ -14,8 +14,7 @@ namespace login_page
 
     public partial class NameitemControl : UserControl
     {
-        public static bool doubleClicked = false;
-        public static string selectedName;
+        public static Action<string> callback_func;
         public NameitemControl()
         {
             InitializeComponent();
@@ -28,8 +27,7 @@ namespace login_page
 
         private void NameitemControl_DoubleClick(object sender, EventArgs e)
         {
-            doubleClicked = true;
-            selectedName = lbname.Text;
+            callback_func?.Invoke(lbname.Text);
         }
 
         private void NameitemControl_MouseHover(object sender, EventArgs e)
@@ -54,8 +52,7 @@ namespace login_page
 
         private void lbname_DoubleClick(object sender, EventArgs e)
         {
-            doubleClicked = true;
-            selectedName = lbname.Text;
+            callback_func?.Invoke(lbname.Text);
         }
 
         private void panel1_MouseHover(object sender, EventArgs e)
@@ -70,8 +67,7 @@ namespace login_page
 
         private void panel1_DoubleClick(object sender, EventArgs e)
         {
-            doubleClicked = true;
-            selectedName = lbname.Text;
+            callback_func?.Invoke(lbname.Text);
         }
     }
 }

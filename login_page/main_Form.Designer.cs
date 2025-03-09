@@ -36,7 +36,7 @@
             AddNewDrug_btn = new Button();
             history_btn = new Button();
             lowStock_btn = new Button();
-            add_q1 = new Add_Q();
+            add_q = new Add_Q();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -140,13 +140,13 @@
             lowStock_btn.UseVisualStyleBackColor = true;
             lowStock_btn.Click += lowStock_btn_Click;
             // 
-            // add_q1
+            // add_q
             // 
-            add_q1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            add_q1.Location = new Point(226, 35);
-            add_q1.Name = "add_q1";
-            add_q1.Size = new Size(1086, 720);
-            add_q1.TabIndex = 2;
+            add_q.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            add_q.Location = new Point(226, 35);
+            add_q.Name = "add_q";
+            add_q.Size = new Size(1086, 720);
+            add_q.TabIndex = 2;
             // 
             // main_Form
             // 
@@ -154,7 +154,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(1312, 755);
-            Controls.Add(add_q1);
+            Controls.Add(add_q);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "main_Form";
@@ -175,6 +175,6 @@
         private Button Add_Quantity;
         private Button Add_New_Drug;
         private Button Remove_Qantity;
-        private Add_Q add_q1;
+        private Add_Q add_q;
     }
 }
