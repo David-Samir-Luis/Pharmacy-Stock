@@ -8,6 +8,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -33,9 +35,9 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int QuantityToAdd { get; set; }
+            public int InOut_Quantity { get; set; }
             public int Stock { get => medicine.Quantity; }
-
+            public int? Price { get => medicine.Price; }
             //public string? Barcode { get; }
             //public DateOnly ExpiryDate { get; set; }
 
@@ -44,11 +46,22 @@ namespace login_page
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
-                QuantityToAdd = q;
+                InOut_Quantity = q;
             }
-            public void UpdateQuantity()
+            public int GetID()
             {
-                medicine.Quantity += QuantityToAdd;
+                return medicine.Id;
+            }
+            public void UpdateQuantity(string OpType )
+            {
+                if (OpType== "Stock In")
+                {
+                    medicine.Quantity += InOut_Quantity;  
+                }
+                else
+                {
+                    medicine.Quantity -= InOut_Quantity;
+                }
             }
         }
 
@@ -64,14 +77,16 @@ namespace login_page
         }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
             if (searchBy_Combo?.SelectedItem?.ToString() == "Name")
             {
-                timer1.Enabled = true;
+                //todo: show dialog search_regex
+
+                search_regex searchRegex = new(callbackBySearch_regex);
+                searchRegex.ShowDialog();
+                searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
             }
-            else
-            {
-                timer1.Enabled = false;
-            }
+
             search_txt.Focus();
         }
         public void searchGeneral(string searchText)
@@ -80,9 +95,9 @@ namespace login_page
             ;
             switch (searchBy_Combo?.SelectedItem?.ToString())
             {
-                case "Name":
-                    item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name?.ToLower().Trim() == searchText).ToList();
-                    break;
+                //case "Name":
+                //    item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name?.ToLower().Trim() == searchText).ToList();
+                //    break;
                 case "Barcode":
                     ///to do search by barcode 
                     item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode?.ToLower().Trim() == searchText).ToList();
@@ -90,7 +105,7 @@ namespace login_page
                     break;
                 case "Code":
                     ///to do search by code 
-                    item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code.ToLower().Trim() == searchText).ToList();
+                    item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code?.ToLower().Trim() == searchText).ToList();
                     break;
                 default:
                     MessageBox.Show("Please select a valid search type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -119,16 +134,16 @@ namespace login_page
         }
         private void DeleteRow()
         {
-            if (itemsToBeAdded_GV.Rows.Count == 0) return; // No rows to delete
-
+            if (itemsToBeAdded_GV?.Rows?.Count == 0) return; // No rows to delete
+                                                             // if (itemsToBeAdded_ls.Count == 0) return; // No rows to delete
             int rowIndex = -1;
 
             // Check if any cell is selected
-            if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            if (itemsToBeAdded_GV?.SelectedCells?.Count > 0)
             {
                 rowIndex = itemsToBeAdded_GV.SelectedCells[0].RowIndex; // Get row index of selected cell
             }
-            else if (itemsToBeAdded_GV.SelectedRows.Count > 0)
+            else if (itemsToBeAdded_GV?.SelectedRows?.Count > 0)
             {
                 rowIndex = itemsToBeAdded_GV.SelectedRows[0].Index; // Get row index of selected row
             }
@@ -139,8 +154,6 @@ namespace login_page
             if (rowIndex >= 0 && rowIndex < itemsToBeAdded_GV.Rows.Count)
             {
                 itemsToBeAdded_ls.RemoveAt(rowIndex); // Delete row
-                itemsToBeAdded_GV.DataSource = null;
-                itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
             }
         }
 
@@ -164,13 +177,18 @@ namespace login_page
             {
                 searchBy_Combo.SelectedIndex = 2;
             }
+            if (keyData == Keys.F2)
+            {
+                searchBy_Combo.SelectedIndex = 3;
+            }
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
 
         private void search_btn_Click(object sender, EventArgs e)
         {
-            if (searchBy_Combo?.SelectedItem?.ToString() != "Name")
+            if (searchBy_Combo?.SelectedItem?.ToString() != "Dynamic Name")
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }
@@ -190,7 +208,7 @@ namespace login_page
 
         private async Task UpdateQuantityUsingQueryAsync()
         {
-            using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
+            using (var db = new PharmacyStoreContext()) 
             {
                 foreach (var item in itemsToBeAdded_ls)
                 {
@@ -203,7 +221,7 @@ namespace login_page
         }
         private async Task AddNewRowInOperationHistoryAsync()
         {
-            using (var db = new PharmacyStoreContext()) // Replace with your actual DbContext
+            using (var db = new PharmacyStoreContext()) 
             {
                 db.OperationsHistories.Add(new OperationsHistory
                 {
@@ -212,8 +230,8 @@ namespace login_page
                     //OperationDetails = "Add Quantity to Medicine",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
-                        MedicineCode = m.Code,
-                        Quantity = (short)m.QuantityToAdd
+                        MedicineId = m.GetID(),
+                        Quantity = (short)m.InOut_Quantity
                     }).ToList()
                 });
                 await db.SaveChangesAsync();
@@ -222,18 +240,18 @@ namespace login_page
         private async void save_n_Click(object sender, EventArgs e)
         {
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
-            {
-           
+            {        
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    item.UpdateQuantity();
+                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString()?? "Stock In");
                 }
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
                 await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
-                await DbServices.Instance.LoadAllDataAsync(); // reload data
+                await DbServices.Instance.LoadDataAsync<OperationsHistory>(); // reload OperationsHistory data 
+                await DbServices.Instance.LoadDataAsync<OperationsMedicine>(); // reload OperationsMedicine data
                 ResetPanel();
             }
             else
@@ -259,11 +277,12 @@ namespace login_page
         private void SearchByname(string name)
         {
             // itemNames = DbServices.Instance.GetData<Medicine>().Where(m =>(bool) m.Name?.ToLower().Trim().StartsWith(name)).ToList();
-            itemNames = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Name?.ToLower()?.Trim(), WildcardToRegex(name), RegexOptions.IgnoreCase)).ToList();
+            itemNames = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Name, WildcardToRegex(name), RegexOptions.IgnoreCase)).ToList();
 
         }
         private void LoadDetails()
         {
+            NameitemControl.callback_func = callbackBySearch_NameitemControl;
             foreach (var item in itemNames)
             {
                 NameitemControl name = new();
@@ -271,6 +290,15 @@ namespace login_page
                 resultContainer.Controls.Add(name);
             }
         }
+
+        private void callbackBySearch_NameitemControl(string name)
+        {
+            callbackBySearch_regex(name);
+            search_txt.Text = "";
+            resultContainer.Height = 0;
+
+        }
+
         // Converts `*` -> `.*` and `?` -> `.` for regex matching
         static string WildcardToRegex(string pattern)
         {
@@ -281,7 +309,7 @@ namespace login_page
         }
         private void search_txt_TextChanged(object sender, EventArgs e)
         {
-            if (searchBy_Combo?.SelectedItem?.ToString() == "Name" && search_txt.TextLength >= 1)
+            if (searchBy_Combo?.SelectedItem?.ToString() == "Dynamic Name" && search_txt.TextLength >= 1)
             {
                 resultContainer.Controls.Clear();
                 try
@@ -304,22 +332,11 @@ namespace login_page
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (NameitemControl.doubleClicked == true)
-            {
-                searchGeneral(NameitemControl.selectedName.ToLower().Trim());
-                NameitemControl.doubleClicked = false;
-                search_txt.Text = "";
-                resultContainer.Height = 0;
-            }
-        }
-
 
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "QuantityToAdd")
+            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
             {
                 if (!string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
                 {
@@ -343,8 +360,18 @@ namespace login_page
                 string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString() ?? "";
                 Edit_Drug editDrug = new(searchedName);
                 editDrug.ShowDialog();
+
             }
-            
+
         }
+        public void callbackBySearch_regex(string name)
+        {
+            Medicine item;
+            item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name == name.Trim()).First();
+            itemsToBeAdded_ls.Add(new MedicineGV(item, 1));
+            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+            itemsToBeAdded_GV.BeginEdit(true);
+        }
+
     }
 }

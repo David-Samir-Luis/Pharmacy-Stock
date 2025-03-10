@@ -7,11 +7,11 @@ public partial class OperationsMedicine
 {
     public int OperationId { get; set; }
 
-    public string MedicineCode { get; set; } = null!;
+    public int MedicineId { get; set; }
 
     public short? Quantity { get; set; }
 
-    public virtual Medicine MedicineCodeNavigation { get; set; } = null!;
+    public virtual Medicine Medicine { get; set; } = null!;
 
     public virtual OperationsHistory Operation { get; set; } = null!;
 }

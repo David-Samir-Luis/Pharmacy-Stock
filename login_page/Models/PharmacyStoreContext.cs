@@ -29,16 +29,17 @@ public partial class PharmacyStoreContext : DbContext
     {
         modelBuilder.Entity<Medicine>(entity =>
         {
-            entity.HasKey(e => e.Code).HasName("PK__Medicine__A25C5AA68D804F76");
-
             entity.ToTable("Medicine");
 
-            entity.HasIndex(e => e.Name, "UQ__Medicine__737584F6968E14B4").IsUnique();
+            entity.HasIndex(e => e.Barcode, "UQ_Medicine_Barcode").IsUnique();
 
-            entity.Property(e => e.Code)
+            entity.HasIndex(e => e.Name, "UQ__tmp_ms_x__737584F6B706C7E0").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Barcode)
                 .HasMaxLength(10)
                 .IsUnicode(false);
-            entity.Property(e => e.Barcode)
+            entity.Property(e => e.Code)
                 .HasMaxLength(10)
                 .IsUnicode(false);
             entity.Property(e => e.ExpiryDate).HasColumnName("Expiry_date");
@@ -60,7 +61,7 @@ public partial class PharmacyStoreContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("Operation_time");
             entity.Property(e => e.OperationType)
-                .HasMaxLength(3)
+                .HasMaxLength(9)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("Operation_type");
@@ -68,19 +69,17 @@ public partial class PharmacyStoreContext : DbContext
 
         modelBuilder.Entity<OperationsMedicine>(entity =>
         {
-            entity.HasKey(e => new { e.OperationId, e.MedicineCode }).HasName("PK__Operatio__BDFD44D9AE9AF4D9");
+            entity.HasKey(e => new { e.OperationId, e.MedicineId }).HasName("PK__tmp_ms_x__9CB68EC4C1B1045A");
 
             entity.ToTable("Operations_medicines");
 
             entity.Property(e => e.OperationId).HasColumnName("Operation_ID");
-            entity.Property(e => e.MedicineCode)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasDefaultValue("0")
-                .HasColumnName("Medicine_code");
+            entity.Property(e => e.MedicineId)
+                .HasDefaultValueSql("('0')")
+                .HasColumnName("Medicine_ID");
 
-            entity.HasOne(d => d.MedicineCodeNavigation).WithMany(p => p.OperationsMedicines)
-                .HasForeignKey(d => d.MedicineCode)
+            entity.HasOne(d => d.Medicine).WithMany(p => p.OperationsMedicines)
+                .HasForeignKey(d => d.MedicineId)
                 .HasConstraintName("FK_OperationsMedicines_Medicine");
 
             entity.HasOne(d => d.Operation).WithMany(p => p.OperationsMedicines)
