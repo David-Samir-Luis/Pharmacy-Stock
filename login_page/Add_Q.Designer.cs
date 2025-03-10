@@ -42,7 +42,6 @@
             panel1 = new Panel();
             resultContainer = new FlowLayoutPanel();
             panel2 = new Panel();
-            timer1 = new System.Windows.Forms.Timer(components);
             StockOperationType = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             contextMenuStrip1.SuspendLayout();
@@ -54,7 +53,7 @@
             // 
             searchBy_Combo.DropDownStyle = ComboBoxStyle.DropDownList;
             searchBy_Combo.FormattingEnabled = true;
-            searchBy_Combo.Items.AddRange(new object[] { "Barcode", "Code", "Name" });
+            searchBy_Combo.Items.AddRange(new object[] { "Barcode", "Code", "Name", "Dynamic Name" });
             searchBy_Combo.Location = new Point(482, 34);
             searchBy_Combo.Name = "searchBy_Combo";
             searchBy_Combo.Size = new Size(151, 28);
@@ -188,11 +187,6 @@
             panel2.Size = new Size(1086, 107);
             panel2.TabIndex = 16;
             // 
-            // timer1
-            // 
-            timer1.Interval = 1;
-            timer1.Tick += timer1_Tick;
-            // 
             // StockOperationType
             // 
             StockOperationType.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -237,7 +231,6 @@
         private Panel panel1;
         private Panel panel2;
         private FlowLayoutPanel resultContainer;
-        private System.Windows.Forms.Timer timer1;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem1;

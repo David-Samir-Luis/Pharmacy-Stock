@@ -54,7 +54,7 @@ namespace login_page
 
         private void Add_New_Drug_Click(object sender, EventArgs e)
         {
-            add_q1.Show();
+            add_q.Show();
         }
     }
 }

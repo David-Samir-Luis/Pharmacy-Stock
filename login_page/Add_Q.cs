@@ -77,14 +77,16 @@ namespace login_page
         }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
             if (searchBy_Combo?.SelectedItem?.ToString() == "Name")
             {
-                timer1.Enabled = true;
+                //todo: show dialog search_regex
+
+                search_regex searchRegex = new(callbackBySearch_regex);
+                searchRegex.ShowDialog();
+                searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
             }
-            else
-            {
-                timer1.Enabled = false;
-            }
+
             search_txt.Focus();
         }
         public void searchGeneral(string searchText)
@@ -93,9 +95,9 @@ namespace login_page
             ;
             switch (searchBy_Combo?.SelectedItem?.ToString())
             {
-                case "Name":
-                    item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name?.ToLower().Trim() == searchText).ToList();
-                    break;
+                //case "Name":
+                //    item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name?.ToLower().Trim() == searchText).ToList();
+                //    break;
                 case "Barcode":
                     ///to do search by barcode 
                     item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode?.ToLower().Trim() == searchText).ToList();
@@ -175,13 +177,18 @@ namespace login_page
             {
                 searchBy_Combo.SelectedIndex = 2;
             }
+            if (keyData == Keys.F2)
+            {
+                searchBy_Combo.SelectedIndex = 3;
+            }
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
 
         private void search_btn_Click(object sender, EventArgs e)
         {
-            if (searchBy_Combo?.SelectedItem?.ToString() != "Name")
+            if (searchBy_Combo?.SelectedItem?.ToString() != "Dynamic Name")
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }
@@ -270,11 +277,12 @@ namespace login_page
         private void SearchByname(string name)
         {
             // itemNames = DbServices.Instance.GetData<Medicine>().Where(m =>(bool) m.Name?.ToLower().Trim().StartsWith(name)).ToList();
-            itemNames = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Name?.ToLower()?.Trim(), WildcardToRegex(name), RegexOptions.IgnoreCase)).ToList();
+            itemNames = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Name, WildcardToRegex(name), RegexOptions.IgnoreCase)).ToList();
 
         }
         private void LoadDetails()
         {
+            NameitemControl.callback_func = callbackBySearch_NameitemControl;
             foreach (var item in itemNames)
             {
                 NameitemControl name = new();
@@ -282,6 +290,15 @@ namespace login_page
                 resultContainer.Controls.Add(name);
             }
         }
+
+        private void callbackBySearch_NameitemControl(string name)
+        {
+            callbackBySearch_regex(name);
+            search_txt.Text = "";
+            resultContainer.Height = 0;
+
+        }
+
         // Converts `*` -> `.*` and `?` -> `.` for regex matching
         static string WildcardToRegex(string pattern)
         {
@@ -292,7 +309,7 @@ namespace login_page
         }
         private void search_txt_TextChanged(object sender, EventArgs e)
         {
-            if (searchBy_Combo?.SelectedItem?.ToString() == "Name" && search_txt.TextLength >= 1)
+            if (searchBy_Combo?.SelectedItem?.ToString() == "Dynamic Name" && search_txt.TextLength >= 1)
             {
                 resultContainer.Controls.Clear();
                 try
@@ -311,17 +328,6 @@ namespace login_page
             }
             else
             {
-                resultContainer.Height = 0;
-            }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (NameitemControl.doubleClicked == true)
-            {
-                searchGeneral(NameitemControl.selectedName.ToLower().Trim());
-                NameitemControl.doubleClicked = false;
-                search_txt.Text = "";
                 resultContainer.Height = 0;
             }
         }
@@ -354,8 +360,18 @@ namespace login_page
                 string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString() ?? "";
                 Edit_Drug editDrug = new(searchedName);
                 editDrug.ShowDialog();
+
             }
 
         }
+        public void callbackBySearch_regex(string name)
+        {
+            Medicine item;
+            item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name == name.Trim()).First();
+            itemsToBeAdded_ls.Add(new MedicineGV(item, 1));
+            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+            itemsToBeAdded_GV.BeginEdit(true);
+        }
+
     }
 }
