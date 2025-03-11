@@ -14,7 +14,7 @@ namespace login_page
 {
     public partial class search_regex : Form
     {
-        static Action<string> callback_func;
+        Action<string> callback_func;
         List<MedicineGV> itemsToBeAdded_ls = new();
         public search_regex(Action<string> call )
         {
