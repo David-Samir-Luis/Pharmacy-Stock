@@ -30,13 +30,14 @@
         {
             panel1 = new Panel();
             panel2 = new Panel();
-            Add_New_Drug = new Button();
+            Drugs_bt = new Button();
             Remove_Qantity = new Button();
             Add_Quantity = new Button();
             AddNewDrug_btn = new Button();
             history_btn = new Button();
             lowStock_btn = new Button();
             add_q = new Add_Q();
+            drugs_Control = new drugs_Control();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -52,7 +53,7 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(33, 11, 97);
-            panel2.Controls.Add(Add_New_Drug);
+            panel2.Controls.Add(Drugs_bt);
             panel2.Controls.Add(Remove_Qantity);
             panel2.Controls.Add(Add_Quantity);
             panel2.Controls.Add(AddNewDrug_btn);
@@ -64,21 +65,21 @@
             panel2.Size = new Size(225, 720);
             panel2.TabIndex = 1;
             // 
-            // Add_New_Drug
+            // Drugs_bt
             // 
-            Add_New_Drug.BackColor = Color.FromArgb(33, 8, 97);
-            Add_New_Drug.FlatAppearance.MouseDownBackColor = Color.FromArgb(75, 8, 138);
-            Add_New_Drug.FlatAppearance.MouseOverBackColor = Color.FromArgb(75, 8, 138);
-            Add_New_Drug.FlatStyle = FlatStyle.Flat;
-            Add_New_Drug.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Add_New_Drug.ForeColor = Color.White;
-            Add_New_Drug.Location = new Point(12, 372);
-            Add_New_Drug.Name = "Add_New_Drug";
-            Add_New_Drug.Size = new Size(200, 40);
-            Add_New_Drug.TabIndex = 14;
-            Add_New_Drug.Text = "Add New Drug";
-            Add_New_Drug.UseVisualStyleBackColor = false;
-            Add_New_Drug.Click += Add_New_Drug_Click;
+            Drugs_bt.BackColor = Color.FromArgb(33, 8, 97);
+            Drugs_bt.FlatAppearance.MouseDownBackColor = Color.FromArgb(75, 8, 138);
+            Drugs_bt.FlatAppearance.MouseOverBackColor = Color.FromArgb(75, 8, 138);
+            Drugs_bt.FlatStyle = FlatStyle.Flat;
+            Drugs_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Drugs_bt.ForeColor = Color.White;
+            Drugs_bt.Location = new Point(12, 372);
+            Drugs_bt.Name = "Drugs_bt";
+            Drugs_bt.Size = new Size(200, 40);
+            Drugs_bt.TabIndex = 14;
+            Drugs_bt.Text = "Drugs";
+            Drugs_bt.UseVisualStyleBackColor = false;
+            Drugs_bt.Click += Drugs_bt_Click;
             // 
             // Remove_Qantity
             // 
@@ -109,6 +110,7 @@
             Add_Quantity.TabIndex = 12;
             Add_Quantity.Text = "Add Quantity";
             Add_Quantity.UseVisualStyleBackColor = false;
+            Add_Quantity.Click += Add_Quantity_Click;
             // 
             // AddNewDrug_btn
             // 
@@ -118,7 +120,6 @@
             AddNewDrug_btn.TabIndex = 11;
             AddNewDrug_btn.Text = "Add New drugs ";
             AddNewDrug_btn.UseVisualStyleBackColor = true;
-            AddNewDrug_btn.Click += AddNewDrug_btn_Click;
             // 
             // history_btn
             // 
@@ -142,11 +143,19 @@
             // 
             // add_q
             // 
-            add_q.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            add_q.Location = new Point(226, 35);
+            add_q.Dock = DockStyle.Fill;
+            add_q.Location = new Point(225, 35);
             add_q.Name = "add_q";
-            add_q.Size = new Size(1086, 720);
+            add_q.Size = new Size(1087, 720);
             add_q.TabIndex = 2;
+            // 
+            // drugs_Control
+            // 
+            drugs_Control.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            drugs_Control.Location = new Point(222, 35);
+            drugs_Control.Name = "drugs_Control";
+            drugs_Control.Size = new Size(1087, 717);
+            drugs_Control.TabIndex = 3;
             // 
             // main_Form
             // 
@@ -154,6 +163,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(1312, 755);
+            Controls.Add(drugs_Control);
             Controls.Add(add_q);
             Controls.Add(panel2);
             Controls.Add(panel1);
@@ -173,8 +183,9 @@
         private Button history_btn;
         private Button AddNewDrug_btn;
         private Button Add_Quantity;
-        private Button Add_New_Drug;
+        private Button Drugs_bt;
         private Button Remove_Qantity;
         private Add_Q add_q;
+        private drugs_Control drugs_Control;
     }
 }
