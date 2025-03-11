@@ -51,9 +51,9 @@
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel1.Controls.Add(itemsToBeAdded_GV);
-            panel1.Location = new Point(1, 49);
+            panel1.Location = new Point(16, 49);
             panel1.Name = "panel1";
-            panel1.Size = new Size(996, 563);
+            panel1.Size = new Size(960, 540);
             panel1.TabIndex = 22;
             // 
             // itemsToBeAdded_GV
@@ -75,7 +75,7 @@
             itemsToBeAdded_GV.RowHeadersVisible = false;
             itemsToBeAdded_GV.RowHeadersWidth = 51;
             itemsToBeAdded_GV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            itemsToBeAdded_GV.Size = new Size(996, 563);
+            itemsToBeAdded_GV.Size = new Size(960, 540);
             itemsToBeAdded_GV.TabIndex = 9;
             itemsToBeAdded_GV.CellDoubleClick += itemsToBeAdded_GV_CellDoubleClick;
             // 
@@ -96,7 +96,7 @@
             search_txt.Location = new Point(142, 12);
             search_txt.Name = "search_txt";
             search_txt.Size = new Size(275, 31);
-            search_txt.TabIndex = 20;
+            search_txt.TabIndex = 0;
             search_txt.KeyDown += search_txt_KeyDown;
             // 
             // search_btn
@@ -114,7 +114,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(998, 613);
+            ClientSize = new Size(998, 615);
             Controls.Add(resultContainer);
             Controls.Add(panel1);
             Controls.Add(searchBy_Combo);

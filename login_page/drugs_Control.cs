@@ -1,28 +1,25 @@
-﻿using login_page.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using login_page.Models;
+using System.Text.RegularExpressions;
 
 namespace login_page
 {
-    public partial class search_regex : Form
+    public partial class drugs_Control : UserControl
     {
-        Action<string> callback_func;
         List<MedicineGV> itemsToBeAdded_ls = new();
-        public search_regex(Action<string> call )
+        public drugs_Control()
         {
-            callback_func = call;
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Name
-            itemsToBeAdded_GV.DataSource = null;
-            search_txt.Focus();
+            itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
         {
@@ -84,7 +81,7 @@ namespace login_page
         }
         private void search_regex_Load(object sender, EventArgs e)
         {
-           
+
         }
 
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
@@ -109,11 +106,12 @@ namespace login_page
             if (e.RowIndex >= 0)
             {
                 // Get the selected row
-               string name = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[1].Value?.ToString();
-                callback_func?.Invoke(name);
+                string name = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[1].Value?.ToString();
+
 
             }
         }
-    }
 
+     
+    }
 }

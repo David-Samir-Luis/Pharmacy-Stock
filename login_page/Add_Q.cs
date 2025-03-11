@@ -127,7 +127,7 @@ namespace login_page
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && searchBy_Combo?.SelectedItem?.ToString() != "Name")
+            if (e.KeyCode == Keys.Enter && searchBy_Combo?.SelectedItem?.ToString() != "Dynamic Name")
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }
@@ -197,14 +197,14 @@ namespace login_page
         private void Add_Q_Load(object sender, EventArgs e)
         {
             search_txt.Focus();
-            CenterButton();
+           // CenterButton();
         }
-        private void CenterButton()
-        {
-            int x = (itemsToBeAdded_GV.Width - save_n.Width) / 3;
-            save_n.Location = new Point(x, save_n.Location.Y);
-            cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
-        }
+        //private void CenterButton()
+        //{
+        //    int x = (itemsToBeAdded_GV.Width - save_n.Width) / 3;
+        //    save_n.Location = new Point(x, save_n.Location.Y);
+        //    cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
+        //}
 
         private async Task UpdateQuantityUsingQueryAsync()
         {
