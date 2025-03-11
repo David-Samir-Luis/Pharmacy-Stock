@@ -127,7 +127,7 @@ namespace login_page
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && searchBy_Combo?.SelectedItem?.ToString() != "Name")
+            if (e.KeyCode == Keys.Enter && searchBy_Combo?.SelectedItem?.ToString() != "Dynamic Name")
             {
                 searchGeneral(search_txt.Text.ToLower().Trim());
             }

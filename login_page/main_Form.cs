@@ -20,7 +20,8 @@ namespace login_page
 
         private void main_Form_Load(object sender, EventArgs e)
         {
-
+            drugs_Control.Visible = false;
+            add_q.Visible = false;
         }
 
         private void added_qantity_TextChanged(object sender, EventArgs e)
@@ -44,17 +45,24 @@ namespace login_page
             this.Close();
         }
 
-        private void AddNewDrug_btn_Click(object sender, EventArgs e)
+        //private void AddNewDrug_btn_Click(object sender, EventArgs e)
+        //{
+        //    this.Hide();
+        //    AddNewDrugs_Form addNewDrugs_Form = new();
+        //    addNewDrugs_Form.ShowDialog();
+        //    this.Close();
+        //}
+
+        private void Drugs_bt_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            AddNewDrugs_Form addNewDrugs_Form = new();
-            addNewDrugs_Form.ShowDialog();
-            this.Close();
+            add_q.Visible = false;
+            drugs_Control.Visible = true;
         }
 
-        private void Add_New_Drug_Click(object sender, EventArgs e)
+        private void Add_Quantity_Click(object sender, EventArgs e)
         {
-            add_q.Show();
+            drugs_Control.Visible = false;
+            add_q.Visible = true;
         }
     }
 }

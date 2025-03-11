@@ -96,7 +96,7 @@
             search_txt.Location = new Point(142, 12);
             search_txt.Name = "search_txt";
             search_txt.Size = new Size(275, 31);
-            search_txt.TabIndex = 20;
+            search_txt.TabIndex = 0;
             search_txt.KeyDown += search_txt_KeyDown;
             // 
             // search_btn
