@@ -52,11 +52,11 @@ namespace login_page
             {
                 return medicine.Id;
             }
-            public void UpdateQuantity(string OpType )
+            public void UpdateQuantity(string OpType)
             {
-                if (OpType== "Stock In")
+                if (OpType == "Stock In")
                 {
-                    medicine.Quantity += InOut_Quantity;  
+                    medicine.Quantity += InOut_Quantity;
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace login_page
         }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
             if (searchBy_Combo?.SelectedItem?.ToString() == "Name")
             {
                 //todo: show dialog search_regex
@@ -197,7 +197,8 @@ namespace login_page
         private void Add_Q_Load(object sender, EventArgs e)
         {
             search_txt.Focus();
-           // CenterButton();
+            resultContainer.BringToFront();
+            // CenterButton();
         }
         //private void CenterButton()
         //{
@@ -208,12 +209,12 @@ namespace login_page
 
         private async Task UpdateQuantityUsingQueryAsync()
         {
-            using (var db = new PharmacyStoreContext()) 
+            using (var db = new PharmacyStoreContext())
             {
                 foreach (var item in itemsToBeAdded_ls)
                 {
                     await db.Medicines
-                        .Where(m => m.Code ==item.Code)
+                        .Where(m => m.Code == item.Code)
                         .ExecuteUpdateAsync(setters =>
                         setters.SetProperty(m => m.Quantity, item.Stock));
                 }
@@ -221,12 +222,12 @@ namespace login_page
         }
         private async Task AddNewRowInOperationHistoryAsync()
         {
-            using (var db = new PharmacyStoreContext()) 
+            using (var db = new PharmacyStoreContext())
             {
                 db.OperationsHistories.Add(new OperationsHistory
                 {
                     OperationTime = DateTime.Now,
-                    OperationType = StockOperationType?.SelectedItem?.ToString()?? "Stock Out",
+                    OperationType = StockOperationType?.SelectedItem?.ToString() ?? "Stock Out",
                     //OperationDetails = "Add Quantity to Medicine",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
@@ -240,14 +241,14 @@ namespace login_page
         private async void save_n_Click(object sender, EventArgs e)
         {
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
-            {        
+            {
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString()?? "Stock In");
+                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString() ?? "Stock In");
                 }
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
                 await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
                 await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
                 await DbServices.Instance.LoadDataAsync<OperationsHistory>(); // reload OperationsHistory data 
@@ -373,5 +374,12 @@ namespace login_page
             itemsToBeAdded_GV.BeginEdit(true);
         }
 
+        private void Add_Q_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                search_txt.Focus(); // Focus the TextBox when the UserControl becomes visible
+            }
+        }
     }
 }

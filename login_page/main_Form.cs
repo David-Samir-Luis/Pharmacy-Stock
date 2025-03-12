@@ -21,7 +21,7 @@ namespace login_page
         private void main_Form_Load(object sender, EventArgs e)
         {
             drugs_Control.Visible = false;
-            add_q.Visible = false;
+            add_q.Visible = true;
         }
 
         private void added_qantity_TextChanged(object sender, EventArgs e)

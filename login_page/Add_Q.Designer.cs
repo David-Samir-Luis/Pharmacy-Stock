@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             searchBy_Combo = new ComboBox();
             search_txt = new TextBox();
             search_btn = new Button();
@@ -54,7 +54,7 @@
             searchBy_Combo.DropDownStyle = ComboBoxStyle.DropDownList;
             searchBy_Combo.FormattingEnabled = true;
             searchBy_Combo.Items.AddRange(new object[] { "Barcode", "Code", "Name", "Dynamic Name" });
-            searchBy_Combo.Location = new Point(450, 17);
+            searchBy_Combo.Location = new Point(527, 17);
             searchBy_Combo.Name = "searchBy_Combo";
             searchBy_Combo.Size = new Size(151, 28);
             searchBy_Combo.TabIndex = 12;
@@ -65,8 +65,8 @@
             search_txt.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             search_txt.Location = new Point(151, 17);
             search_txt.Name = "search_txt";
-            search_txt.Size = new Size(275, 31);
-            search_txt.TabIndex = 11;
+            search_txt.Size = new Size(349, 31);
+            search_txt.TabIndex = 0;
             search_txt.TextChanged += search_txt_TextChanged;
             search_txt.KeyDown += search_txt_KeyDown;
             // 
@@ -85,14 +85,14 @@
             // 
             itemsToBeAdded_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             itemsToBeAdded_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(33, 11, 97);
-            dataGridViewCellStyle2.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(33, 11, 97);
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(33, 11, 97);
+            dataGridViewCellStyle1.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(33, 11, 97);
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             itemsToBeAdded_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             itemsToBeAdded_GV.ContextMenuStrip = contextMenuStrip1;
             itemsToBeAdded_GV.EnableHeadersVisualStyles = false;
@@ -167,7 +167,7 @@
             resultContainer.BackColor = Color.White;
             resultContainer.Location = new Point(151, 48);
             resultContainer.Name = "resultContainer";
-            resultContainer.Size = new Size(275, 0);
+            resultContainer.Size = new Size(349, 0);
             resultContainer.TabIndex = 10;
             // 
             // panel2
@@ -201,7 +201,7 @@
             StockOperationType.DropDownStyle = ComboBoxStyle.DropDownList;
             StockOperationType.FormattingEnabled = true;
             StockOperationType.Items.AddRange(new object[] { "Stock Out", "Stock In" });
-            StockOperationType.Location = new Point(641, 17);
+            StockOperationType.Location = new Point(718, 17);
             StockOperationType.Name = "StockOperationType";
             StockOperationType.Size = new Size(151, 28);
             StockOperationType.TabIndex = 17;
@@ -220,6 +220,7 @@
             Name = "Add_Q";
             Size = new Size(1016, 674);
             Load += Add_Q_Load;
+            VisibleChanged += Add_Q_VisibleChanged;
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             panel2.ResumeLayout(false);
