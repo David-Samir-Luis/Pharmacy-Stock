@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using login_page.Models;
 using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace login_page
 {
@@ -112,6 +113,12 @@ namespace login_page
             }
         }
 
-     
+        private void drugs_Control_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                search_txt.Focus(); // Focus the TextBox when the UserControl becomes visible
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             searchBy_Combo = new ComboBox();
             search_txt = new TextBox();
             search_btn = new Button();
@@ -66,7 +66,7 @@
             search_txt.Location = new Point(151, 17);
             search_txt.Name = "search_txt";
             search_txt.Size = new Size(275, 31);
-            search_txt.TabIndex = 11;
+            search_txt.TabIndex = 0;
             search_txt.TextChanged += search_txt_TextChanged;
             search_txt.KeyDown += search_txt_KeyDown;
             // 
@@ -85,14 +85,14 @@
             // 
             itemsToBeAdded_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             itemsToBeAdded_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(33, 11, 97);
-            dataGridViewCellStyle2.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(33, 11, 97);
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(33, 11, 97);
+            dataGridViewCellStyle1.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(33, 11, 97);
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             itemsToBeAdded_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             itemsToBeAdded_GV.ContextMenuStrip = contextMenuStrip1;
             itemsToBeAdded_GV.EnableHeadersVisualStyles = false;
@@ -220,6 +220,7 @@
             Name = "Add_Q";
             Size = new Size(1016, 674);
             Load += Add_Q_Load;
+            VisibleChanged += Add_Q_VisibleChanged;
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             panel2.ResumeLayout(false);
