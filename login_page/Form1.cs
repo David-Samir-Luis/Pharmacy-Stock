@@ -56,6 +56,7 @@ namespace login_page
 
         private async void login_form_Load(object sender, EventArgs e)
         {
+            DbServices.Instance.ClearOldRecords();
              await DbServices.Instance.LoadAllDataAsync();
         }
     }
