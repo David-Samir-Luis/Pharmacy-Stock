@@ -54,7 +54,7 @@
             searchBy_Combo.DropDownStyle = ComboBoxStyle.DropDownList;
             searchBy_Combo.FormattingEnabled = true;
             searchBy_Combo.Items.AddRange(new object[] { "Barcode", "Code", "Name", "Dynamic Name" });
-            searchBy_Combo.Location = new Point(450, 17);
+            searchBy_Combo.Location = new Point(527, 17);
             searchBy_Combo.Name = "searchBy_Combo";
             searchBy_Combo.Size = new Size(151, 28);
             searchBy_Combo.TabIndex = 12;
@@ -65,7 +65,7 @@
             search_txt.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             search_txt.Location = new Point(151, 17);
             search_txt.Name = "search_txt";
-            search_txt.Size = new Size(275, 31);
+            search_txt.Size = new Size(349, 31);
             search_txt.TabIndex = 0;
             search_txt.TextChanged += search_txt_TextChanged;
             search_txt.KeyDown += search_txt_KeyDown;
@@ -167,7 +167,7 @@
             resultContainer.BackColor = Color.White;
             resultContainer.Location = new Point(151, 48);
             resultContainer.Name = "resultContainer";
-            resultContainer.Size = new Size(275, 0);
+            resultContainer.Size = new Size(349, 0);
             resultContainer.TabIndex = 10;
             // 
             // panel2
@@ -201,7 +201,7 @@
             StockOperationType.DropDownStyle = ComboBoxStyle.DropDownList;
             StockOperationType.FormattingEnabled = true;
             StockOperationType.Items.AddRange(new object[] { "Stock Out", "Stock In" });
-            StockOperationType.Location = new Point(641, 17);
+            StockOperationType.Location = new Point(718, 17);
             StockOperationType.Name = "StockOperationType";
             StockOperationType.Size = new Size(151, 28);
             StockOperationType.TabIndex = 17;
