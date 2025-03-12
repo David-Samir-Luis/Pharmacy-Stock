@@ -135,7 +135,12 @@ namespace login_page
         private void DeleteRow()
         {
             if (itemsToBeAdded_GV?.Rows?.Count == 0) return; // No rows to delete
-                                                             // if (itemsToBeAdded_ls.Count == 0) return; // No rows to delete
+            if (itemsToBeAdded_ls.Count == 1)
+            {
+                for (int i = 0; i < 10; i++) ; // wait for a while ,this avoids the error of deleting the first and only row
+                itemsToBeAdded_ls.Clear();
+                return; // No rows to delete
+            }
             int rowIndex = -1;
 
             // Check if any cell is selected

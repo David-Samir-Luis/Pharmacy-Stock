@@ -21,8 +21,7 @@ namespace login_page
             callback_func = call;
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Name
-            itemsToBeAdded_GV.DataSource = null;
-            search_txt.Focus();
+            itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
         {
@@ -98,7 +97,7 @@ namespace login_page
 
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            itemsToBeAdded_GV.DataSource = null;
+            //itemsToBeAdded_GV.DataSource = null;
             search_txt.Text = "";
             search_txt.Focus();
         }
