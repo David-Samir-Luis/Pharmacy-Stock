@@ -35,6 +35,7 @@
             // 
             // lbname
             // 
+            lbname.Anchor = AnchorStyles.Left;
             lbname.AutoSize = true;
             lbname.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbname.Location = new Point(13, 9);
@@ -52,7 +53,7 @@
             panel1.Controls.Add(lbname);
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(275, 41);
+            panel1.Size = new Size(349, 41);
             panel1.TabIndex = 1;
             panel1.DoubleClick += panel1_DoubleClick;
             panel1.MouseLeave += panel1_MouseLeave;
@@ -65,7 +66,7 @@
             Controls.Add(panel1);
             Margin = new Padding(0);
             Name = "NameitemControl";
-            Size = new Size(275, 41);
+            Size = new Size(349, 41);
             DoubleClick += NameitemControl_DoubleClick;
             MouseLeave += NameitemControl_MouseLeave;
             MouseHover += NameitemControl_MouseHover;
