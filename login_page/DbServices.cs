@@ -54,24 +54,17 @@ namespace login_page
             return _dataCache.TryGetValue(typeof(T), out var data) ? (List<T>)data : new List<T>();
         }
 
-        //public async Task BulkUpdateUsingQueryAsync<Ttable, Tvalue>(List<Ttable> table ,Func<Ttable,bool> condition,Func<Ttable,Tvalue> setprop) where Ttable : class
-        //{
-        //    if ((typeof(Ttable).Namespace != "login_page.Models")
-        //        && typeof(Ttable) != typeof(PharmacyStoreContext))
-        //        throw new Exception("Ttable must be database entity classes");
-        
-        //    using (var context = new PharmacyStoreContext())
-        //    {
-        //        var dbSet = context.Set<Ttable>();
+        public void ClearOldRecords()
+        {
+            using (var db = new PharmacyStoreContext())
+            {
+                DateTime cutoffDate = DateTime.Now.AddDays(-30); // 30 days ago
 
-        //        for (int i = 0; i < table.Count; i++)
-        //        {
-        //            await dbSet.Where(e => condition.Invoke(table[i]) == true)
-        //            .ExecuteUpdateAsync(setters => setters.SetProperty(e => EF.Property<Tvalue>(e, fieldName), newValue));
+                int deletedRows = db.Database.ExecuteSqlRaw(
+                    "DELETE FROM Operations_History WHERE Operation_Time < {0}", cutoffDate);
 
-        //        }
-        //    }
-        //}
-
+                //MessageBox.Show($"Deleted {deletedRows} old records.");
+            }
+        }
     }
 }
