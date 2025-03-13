@@ -80,10 +80,6 @@ namespace login_page
         {
             searchGeneral(search_txt.Text.ToLower().Trim());
         }
-        private void search_regex_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
         {
@@ -96,7 +92,6 @@ namespace login_page
 
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            itemsToBeAdded_GV.DataSource = null;
             search_txt.Text = "";
             search_txt.Focus();
         }
@@ -120,5 +115,33 @@ namespace login_page
                 search_txt.Focus(); // Focus the TextBox when the UserControl becomes visible
             }
         }
+
+        private void Add_bt_Click(object sender, EventArgs e)
+        {
+            Add_Drug addDrug = new Add_Drug();
+            addDrug.ShowDialog();
+        }
+
+        private void Delete_bt_Click(object sender, EventArgs e)
+        {
+            if (itemsToBeAdded_GV.SelectedRows.Count > 0)
+            {
+                string selected_Name = itemsToBeAdded_GV.SelectedRows[0].Cells["Name"].Value?.ToString() ?? "NA";
+                ///todo delete the drug in the selected row 
+            }
+
+        }
+
+        private void Edit_bt_Click(object sender, EventArgs e)
+        {
+            if (itemsToBeAdded_GV.SelectedRows.Count > 0)
+            {
+                string searchedName = itemsToBeAdded_GV.SelectedRows[0].Cells["Name"].Value?.ToString() ?? "NA";
+                Edit_Drug editDrug = new(searchedName);
+                editDrug.ShowDialog();
+            }
+        }
+
+        
     }
 }

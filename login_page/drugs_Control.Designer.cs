@@ -37,7 +37,6 @@
             search_btn = new Button();
             Edit_bt = new Button();
             Add_bt = new Button();
-            Copy_bt = new Button();
             Delete_bt = new Button();
             panel2 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -85,6 +84,7 @@
             itemsToBeAdded_GV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             itemsToBeAdded_GV.Size = new Size(966, 506);
             itemsToBeAdded_GV.TabIndex = 9;
+            itemsToBeAdded_GV.CellDoubleClick += itemsToBeAdded_GV_CellDoubleClick;
             // 
             // searchBy_Combo
             // 
@@ -95,6 +95,7 @@
             searchBy_Combo.Name = "searchBy_Combo";
             searchBy_Combo.Size = new Size(151, 28);
             searchBy_Combo.TabIndex = 26;
+            searchBy_Combo.SelectedIndexChanged += searchBy_Combo_SelectedIndexChanged;
             // 
             // search_txt
             // 
@@ -103,6 +104,7 @@
             search_txt.Name = "search_txt";
             search_txt.Size = new Size(275, 31);
             search_txt.TabIndex = 0;
+            search_txt.KeyDown += search_txt_KeyDown;
             // 
             // search_btn
             // 
@@ -124,12 +126,13 @@
             Edit_bt.FlatStyle = FlatStyle.Flat;
             Edit_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Edit_bt.ForeColor = Color.White;
-            Edit_bt.Location = new Point(272, 32);
+            Edit_bt.Location = new Point(392, 32);
             Edit_bt.Name = "Edit_bt";
             Edit_bt.Size = new Size(178, 40);
             Edit_bt.TabIndex = 29;
             Edit_bt.Text = "Edit";
             Edit_bt.UseVisualStyleBackColor = false;
+            Edit_bt.Click += Edit_bt_Click;
             // 
             // Add_bt
             // 
@@ -140,28 +143,13 @@
             Add_bt.FlatStyle = FlatStyle.Flat;
             Add_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Add_bt.ForeColor = Color.White;
-            Add_bt.Location = new Point(31, 32);
+            Add_bt.Location = new Point(71, 32);
             Add_bt.Name = "Add_bt";
             Add_bt.Size = new Size(178, 40);
             Add_bt.TabIndex = 28;
             Add_bt.Text = "Add";
             Add_bt.UseVisualStyleBackColor = false;
-            // 
-            // Copy_bt
-            // 
-            Copy_bt.Anchor = AnchorStyles.None;
-            Copy_bt.BackColor = Color.FromArgb(33, 8, 97);
-            Copy_bt.FlatAppearance.MouseDownBackColor = Color.FromArgb(75, 8, 138);
-            Copy_bt.FlatAppearance.MouseOverBackColor = Color.FromArgb(75, 8, 138);
-            Copy_bt.FlatStyle = FlatStyle.Flat;
-            Copy_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Copy_bt.ForeColor = Color.White;
-            Copy_bt.Location = new Point(513, 32);
-            Copy_bt.Name = "Copy_bt";
-            Copy_bt.Size = new Size(178, 40);
-            Copy_bt.TabIndex = 30;
-            Copy_bt.Text = "Copy";
-            Copy_bt.UseVisualStyleBackColor = false;
+            Add_bt.Click += Add_bt_Click;
             // 
             // Delete_bt
             // 
@@ -172,12 +160,13 @@
             Delete_bt.FlatStyle = FlatStyle.Flat;
             Delete_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Delete_bt.ForeColor = Color.White;
-            Delete_bt.Location = new Point(755, 32);
+            Delete_bt.Location = new Point(715, 32);
             Delete_bt.Name = "Delete_bt";
             Delete_bt.Size = new Size(178, 40);
             Delete_bt.TabIndex = 31;
             Delete_bt.Text = "Delete";
             Delete_bt.UseVisualStyleBackColor = false;
+            Delete_bt.Click += Delete_bt_Click;
             // 
             // panel2
             // 
@@ -190,13 +179,12 @@
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 4;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.Controls.Add(Delete_bt, 3, 0);
-            tableLayoutPanel1.Controls.Add(Copy_bt, 2, 0);
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Controls.Add(Delete_bt, 2, 0);
             tableLayoutPanel1.Controls.Add(Add_bt, 0, 0);
             tableLayoutPanel1.Controls.Add(Edit_bt, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
@@ -238,7 +226,6 @@
         private Button search_btn;
         private Button Edit_bt;
         private Button Add_bt;
-        private Button Copy_bt;
         private Button Delete_bt;
         private Panel panel2;
         private TableLayoutPanel tableLayoutPanel1;
