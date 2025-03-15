@@ -368,7 +368,7 @@ namespace login_page
             //}
             if (itemsToBeAdded_GV.SelectedRows.Count > 0)
             {
-                string searchedName = itemsToBeAdded_GV.SelectedRows[0].Cells["Name"].Value?.ToString()??"NA";
+                string searchedName = itemsToBeAdded_GV.SelectedRows[0].Cells["Name"].Value?.ToString() ?? "NA";
                 Edit_Drug editDrug = new(searchedName);
                 editDrug.ShowDialog();
             }
@@ -389,6 +389,24 @@ namespace login_page
             if (this.Visible)
             {
                 search_txt.Focus(); // Focus the TextBox when the UserControl becomes visible
+            }
+        }
+
+        private void itemsToBeAdded_GV_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (e.Control is System.Windows.Forms.TextBox textBox)
+            {
+                // Remove old event handlers to avoid duplicates
+                textBox.KeyDown -= TextBox_KeyDown;
+                textBox.KeyDown += TextBox_KeyDown;
+            }
+        }
+
+        private void TextBox_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Delete)
+            {
+                e.SuppressKeyPress = true; // Prevents deletion in edit mode
             }
         }
     }
