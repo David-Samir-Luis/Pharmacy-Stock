@@ -342,13 +342,10 @@ namespace login_page
             // Check if the column should allow only numbers (optional)
             if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
             {
-                if (!string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
-                {
-                    if (!int.TryParse(e.FormattedValue.ToString(), out int number) || number < 0)
-                    {
+                if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
+                {                   
                         MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         e.Cancel = true; // Cancel the entry and keep focus on the cell
-                    }
                 }
             }
         }
