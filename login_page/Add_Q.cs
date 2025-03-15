@@ -80,8 +80,6 @@ namespace login_page
 
             if (searchBy_Combo?.SelectedItem?.ToString() == "Name")
             {
-                //todo: show dialog search_regex
-
                 search_regex searchRegex = new(callbackBySearch_regex);
                 searchRegex.ShowDialog();
                 searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
@@ -361,13 +359,20 @@ namespace login_page
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            //if (itemsToBeAdded_GV.SelectedCells.Count > 0)
+            //{
+            //    string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString() ?? "NA";
+            //    Edit_Drug editDrug = new(searchedName);
+            //    editDrug.ShowDialog();
+
+            //}
+            if (itemsToBeAdded_GV.SelectedRows.Count > 0)
             {
-                string searchedName = itemsToBeAdded_GV.SelectedCells[0].OwningRow.Cells["Name"].Value?.ToString() ?? "";
+                string searchedName = itemsToBeAdded_GV.SelectedRows[0].Cells["Name"].Value?.ToString()??"NA";
                 Edit_Drug editDrug = new(searchedName);
                 editDrug.ShowDialog();
-
             }
+
 
         }
         public void callbackBySearch_regex(string name)

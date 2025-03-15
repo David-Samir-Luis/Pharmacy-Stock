@@ -81,10 +81,6 @@ namespace login_page
         {
             searchGeneral(search_txt.Text.ToLower().Trim());
         }
-        private void search_regex_Load(object sender, EventArgs e)
-        {
-           
-        }
 
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
         {

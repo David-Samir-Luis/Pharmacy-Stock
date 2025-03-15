@@ -123,7 +123,6 @@
             Name = "search_regex";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "search_regex";
-            Load += search_regex_Load;
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).EndInit();
             ResumeLayout(false);
