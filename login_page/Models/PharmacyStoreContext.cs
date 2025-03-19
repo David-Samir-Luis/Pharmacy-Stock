@@ -15,6 +15,8 @@ public partial class PharmacyStoreContext : DbContext
     {
     }
 
+    public virtual DbSet<DrugDateStock> DrugDateStocks { get; set; }
+
     public virtual DbSet<Medicine> Medicines { get; set; }
 
     public virtual DbSet<OperationsHistory> OperationsHistories { get; set; }
@@ -27,6 +29,20 @@ public partial class PharmacyStoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<DrugDateStock>(entity =>
+        {
+            entity.HasKey(e => new { e.MedicineId, e.ExpireDate }).HasName("PK__DrugDate__A946BED290565BD9");
+
+            entity.ToTable("DrugDateStock");
+
+            entity.Property(e => e.MedicineId).HasColumnName("Medicine_ID");
+
+            entity.HasOne(d => d.Medicine).WithMany(p => p.DrugDateStocks)
+                .HasForeignKey(d => d.MedicineId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__DrugDateS__Medic__02FC7413");
+        });
+
         modelBuilder.Entity<Medicine>(entity =>
         {
             entity.ToTable("Medicine");
@@ -42,7 +58,6 @@ public partial class PharmacyStoreContext : DbContext
             entity.Property(e => e.Code)
                 .HasMaxLength(10)
                 .IsUnicode(false);
-            entity.Property(e => e.ExpiryDate).HasColumnName("Expiry_date");
             entity.Property(e => e.MinimumQuantity).HasDefaultValue(5);
             entity.Property(e => e.Name)
                 .HasMaxLength(50)

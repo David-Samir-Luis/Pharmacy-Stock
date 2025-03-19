@@ -105,6 +105,7 @@
             itemsToBeAdded_GV.TabIndex = 9;
             itemsToBeAdded_GV.CellValidating += itemsToBeAdded_GV_CellValidating;
             itemsToBeAdded_GV.CellValueChanged += itemsToBeAdded_GV_CellValueChanged;
+            itemsToBeAdded_GV.EditingControlShowing += itemsToBeAdded_GV_EditingControlShowing;
             // 
             // contextMenuStrip1
             // 

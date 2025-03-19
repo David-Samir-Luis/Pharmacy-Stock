@@ -11,8 +11,6 @@ public partial class Medicine
 
     public int Quantity { get; set; }
 
-    public DateOnly ExpiryDate { get; set; }
-
     public int? MinimumQuantity { get; set; }
 
     public string? Barcode { get; set; }
@@ -20,6 +18,8 @@ public partial class Medicine
     public int? Price { get; set; }
 
     public int Id { get; set; }
+
+    public virtual ICollection<DrugDateStock> DrugDateStocks { get; set; } = new List<DrugDateStock>();
 
     public virtual ICollection<OperationsMedicine> OperationsMedicines { get; set; } = new List<OperationsMedicine>();
 }

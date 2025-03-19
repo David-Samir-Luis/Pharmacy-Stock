@@ -172,12 +172,21 @@ namespace login_page
                     return;
                 }
             }
-
-            if (!int.TryParse(Price_txt.Text, out int Price) || Price < 0 )
+            int? Price ;
+            if(Price_txt.Text=="")
+            {
+                Price = null;
+            }
+            else if (int.TryParse(Price_txt.Text, out int Price1) && Price1 >= 0)
+            {
+                Price = Price1;
+            }
+            else
             {
                 MessageBox.Show($"Please enter a Valid Postive Integer number in \"Price\" Field!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
             
 
             if (!int.TryParse(MinQuantity_txt.Text, out int MinQuantity) || MinQuantity < 0)
