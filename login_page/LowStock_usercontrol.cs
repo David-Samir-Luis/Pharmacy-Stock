@@ -13,9 +13,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace login_page
 {
-    public partial class LowStock_Form : Form
+    public partial class LowStock_usercontrol : UserControl
     {
-        public LowStock_Form()
+        public LowStock_usercontrol()
         {
             InitializeComponent();
         }
@@ -54,10 +54,10 @@ namespace login_page
                 medicines_var = medicines_var.Where(n => (n.Quantity <= n.MinimumQuantity))
                 .ToList();
             }
-       
+
             if (ignoreZero_checkBox.Checked)
             {
-       
+
                 medicines_var = medicines_var.Where(n => n.Quantity != 0)
                 .ToList();
             }
@@ -65,8 +65,8 @@ namespace login_page
             {
                 // do Nothing
             }
-       
-       
+
+
             lowStock_GV.DataSource = medicines_var.Select(n => new
             {
                 Code = n.Code,
@@ -75,10 +75,10 @@ namespace login_page
                 MinimumQuantity = n.MinimumQuantity
             })
                 .ToList();
-       
+
         }
 
-        private void LowStock_Form_Load(object sender, EventArgs e)
+        private void LowStock_usercontrol_Load(object sender, EventArgs e)
         {
             LoadMedicinesOnGridView();
         }
@@ -128,5 +128,7 @@ namespace login_page
                 minimum_txt.ForeColor = Color.Gray;  // Set text color to gray
             }
         }
+
+       
     }
 }

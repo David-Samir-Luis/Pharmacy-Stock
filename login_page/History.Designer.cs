@@ -1,6 +1,6 @@
 ﻿namespace login_page
 {
-    partial class Form2
+    partial class History
     {
         /// <summary>
         /// Required designer variable.
@@ -43,34 +43,32 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(1193, 161);
+            dataGridView1.Size = new Size(951, 240);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             // 
             // dataGridView2
             // 
-            dataGridView2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Location = new Point(33, 248);
+            dataGridView2.Location = new Point(33, 339);
             dataGridView2.Name = "dataGridView2";
             dataGridView2.RowHeadersWidth = 51;
             dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView2.Size = new Size(1193, 222);
+            dataGridView2.Size = new Size(951, 249);
             dataGridView2.TabIndex = 1;
             // 
-            // Form2
+            // History
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1315, 534);
             Controls.Add(dataGridView2);
             Controls.Add(dataGridView1);
-            Name = "Form2";
-            Text = "Form2";
-            WindowState = FormWindowState.Maximized;
-            Load += Form2_Load;
+            Name = "History";
+            Size = new Size(1021, 624);
+            Load += History_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ResumeLayout(false);

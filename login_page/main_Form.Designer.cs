@@ -30,14 +30,15 @@
         {
             panel1 = new Panel();
             panel2 = new Panel();
+            Low_Stocks_bt = new Button();
+            History_bt = new Button();
             Drugs_bt = new Button();
             Remove_Qantity = new Button();
             Add_Quantity = new Button();
-            AddNewDrug_btn = new Button();
-            history_btn = new Button();
-            lowStock_btn = new Button();
             add_q = new Add_Q();
             drugs_Control = new drugs_Control();
+            history_control = new History();
+            lowStock_user = new LowStock_usercontrol();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -53,17 +54,48 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(33, 11, 97);
+            panel2.Controls.Add(Low_Stocks_bt);
+            panel2.Controls.Add(History_bt);
             panel2.Controls.Add(Drugs_bt);
             panel2.Controls.Add(Remove_Qantity);
             panel2.Controls.Add(Add_Quantity);
-            panel2.Controls.Add(AddNewDrug_btn);
-            panel2.Controls.Add(history_btn);
-            panel2.Controls.Add(lowStock_btn);
             panel2.Dock = DockStyle.Left;
             panel2.Location = new Point(0, 35);
             panel2.Name = "panel2";
             panel2.Size = new Size(225, 720);
             panel2.TabIndex = 1;
+            // 
+            // Low_Stocks_bt
+            // 
+            Low_Stocks_bt.BackColor = Color.FromArgb(33, 8, 97);
+            Low_Stocks_bt.FlatAppearance.MouseDownBackColor = Color.FromArgb(75, 8, 138);
+            Low_Stocks_bt.FlatAppearance.MouseOverBackColor = Color.FromArgb(75, 8, 138);
+            Low_Stocks_bt.FlatStyle = FlatStyle.Flat;
+            Low_Stocks_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Low_Stocks_bt.ForeColor = Color.White;
+            Low_Stocks_bt.Location = new Point(12, 504);
+            Low_Stocks_bt.Name = "Low_Stocks_bt";
+            Low_Stocks_bt.Size = new Size(200, 40);
+            Low_Stocks_bt.TabIndex = 16;
+            Low_Stocks_bt.Text = "Low Stocks";
+            Low_Stocks_bt.UseVisualStyleBackColor = false;
+            Low_Stocks_bt.Click += Low_Stocks_bt_Click;
+            // 
+            // History_bt
+            // 
+            History_bt.BackColor = Color.FromArgb(33, 8, 97);
+            History_bt.FlatAppearance.MouseDownBackColor = Color.FromArgb(75, 8, 138);
+            History_bt.FlatAppearance.MouseOverBackColor = Color.FromArgb(75, 8, 138);
+            History_bt.FlatStyle = FlatStyle.Flat;
+            History_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            History_bt.ForeColor = Color.White;
+            History_bt.Location = new Point(12, 435);
+            History_bt.Name = "History_bt";
+            History_bt.Size = new Size(200, 40);
+            History_bt.TabIndex = 15;
+            History_bt.Text = "History";
+            History_bt.UseVisualStyleBackColor = false;
+            History_bt.Click += History_bt_Click;
             // 
             // Drugs_bt
             // 
@@ -73,7 +105,7 @@
             Drugs_bt.FlatStyle = FlatStyle.Flat;
             Drugs_bt.Font = new Font("Arial Rounded MT Bold", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Drugs_bt.ForeColor = Color.White;
-            Drugs_bt.Location = new Point(12, 372);
+            Drugs_bt.Location = new Point(12, 368);
             Drugs_bt.Name = "Drugs_bt";
             Drugs_bt.Size = new Size(200, 40);
             Drugs_bt.TabIndex = 14;
@@ -112,35 +144,6 @@
             Add_Quantity.UseVisualStyleBackColor = false;
             Add_Quantity.Click += Add_Quantity_Click;
             // 
-            // AddNewDrug_btn
-            // 
-            AddNewDrug_btn.Location = new Point(29, 522);
-            AddNewDrug_btn.Name = "AddNewDrug_btn";
-            AddNewDrug_btn.Size = new Size(191, 29);
-            AddNewDrug_btn.TabIndex = 11;
-            AddNewDrug_btn.Text = "Add New drugs ";
-            AddNewDrug_btn.UseVisualStyleBackColor = true;
-            // 
-            // history_btn
-            // 
-            history_btn.Location = new Point(29, 634);
-            history_btn.Name = "history_btn";
-            history_btn.Size = new Size(134, 29);
-            history_btn.TabIndex = 10;
-            history_btn.Text = "IN/OUT History ";
-            history_btn.UseVisualStyleBackColor = true;
-            history_btn.Click += history_btn_Click;
-            // 
-            // lowStock_btn
-            // 
-            lowStock_btn.Location = new Point(29, 568);
-            lowStock_btn.Name = "lowStock_btn";
-            lowStock_btn.Size = new Size(137, 29);
-            lowStock_btn.TabIndex = 9;
-            lowStock_btn.Text = "Low Stock Drugs";
-            lowStock_btn.UseVisualStyleBackColor = true;
-            lowStock_btn.Click += lowStock_btn_Click;
-            // 
             // add_q
             // 
             add_q.Dock = DockStyle.Fill;
@@ -157,12 +160,30 @@
             drugs_Control.Size = new Size(1087, 717);
             drugs_Control.TabIndex = 3;
             // 
+            // history_control
+            // 
+            history_control.Dock = DockStyle.Fill;
+            history_control.Location = new Point(225, 35);
+            history_control.Name = "history_control";
+            history_control.Size = new Size(1087, 720);
+            history_control.TabIndex = 4;
+            // 
+            // lowStock_user
+            // 
+            lowStock_user.Dock = DockStyle.Fill;
+            lowStock_user.Location = new Point(225, 35);
+            lowStock_user.Name = "lowStock_user";
+            lowStock_user.Size = new Size(1087, 720);
+            lowStock_user.TabIndex = 5;
+            // 
             // main_Form
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(1312, 755);
+            Controls.Add(lowStock_user);
+            Controls.Add(history_control);
             Controls.Add(drugs_Control);
             Controls.Add(add_q);
             Controls.Add(panel2);
@@ -179,13 +200,14 @@
 
         private Panel panel1;
         private Panel panel2;
-        private Button lowStock_btn;
-        private Button history_btn;
-        private Button AddNewDrug_btn;
         private Button Add_Quantity;
-        private Button Drugs_bt;
         private Button Remove_Qantity;
         private Add_Q add_q;
+        private Button Drugs_bt;
+        private Button History_bt;
         private drugs_Control drugs_Control;
+        private History history_control;
+        private LowStock_usercontrol lowStock_user;
+        private Button Low_Stocks_bt;
     }
 }
