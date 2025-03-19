@@ -66,5 +66,22 @@ namespace login_page
                 //MessageBox.Show($"Deleted {deletedRows} old records.");
             }
         }
+
+        internal void AddData<T>(T medicine) where T : class
+        {
+            // ensure that the class T is one of the classes in directory Model
+            // and NOT class PharmacyStoreContext
+            if ((typeof(T).Namespace != "login_page.Models")
+                && typeof(T) != typeof(PharmacyStoreContext))
+            {
+//                MessageBox.Show($"ERROR Type ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; 
+            }
+            using (var db = new PharmacyStoreContext())
+            {
+                db.Set<T>().Add(medicine);
+                db.SaveChanges();
+            }
+        }
     }
 }

@@ -90,7 +90,7 @@ namespace login_page
         public void searchGeneral(string searchText)
         {
             List<Medicine> item;
-            ;
+            if(string.IsNullOrEmpty(searchText)) return;
             switch (searchBy_Combo?.SelectedItem?.ToString())
             {
                 //case "Name":

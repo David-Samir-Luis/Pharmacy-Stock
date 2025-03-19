@@ -103,8 +103,8 @@ namespace login_page
 
         private async Task UpdateMedicineUsingQueryAsync()
         {
-            
-            using (var db = new PharmacyStoreContext()) 
+
+            using (var db = new PharmacyStoreContext())
             {
 
                 await db.Medicines
@@ -124,83 +124,39 @@ namespace login_page
             string Code = Code_txt.Text.Trim();
             string Barcode = Barcode_txt.Text.Trim();
             string Name = Name_txt.Text.Trim();
-            if (medicineData.Name != Name_txt.Text)
-            {
-                if(Name.IsNullOrEmpty())
-                {
-                    MessageBox.Show($"Please enter a Name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Name_txt.Focus();
-                    return;
-                }
+            string PriceTXT = Price_txt.Text.Trim();
+            string MinQuantityTXT = MinQuantity_txt.Text.Trim();
 
-                if (DbServices.Instance.GetData<Medicine>().Where(m => m.Name == Name)?.Any() ?? false)
-                {
-                    MessageBox.Show($"This Name is already used ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Name_txt.Focus();
-                    return;
-                }
-
-            }
-            if (medicineData.Barcode != Barcode)
+            if (!Helper.AreMedicineInputsValid(Name, Code, Barcode, PriceTXT, MinQuantityTXT, out ErrorID errorID, medicineData))
             {
-                if (Barcode.IsNullOrEmpty())
+                switch (errorID)
                 {
-                    MessageBox.Show($"Please enter a Barcode", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Barcode_txt.Focus();
-                    return;
+                    case ErrorID.Success:
+                        break;
+                    case ErrorID.Name:
+                        Name_txt.Focus();
+                        break;
+                    case ErrorID.Code:
+                        Code_txt.Focus();
+                        break;
+                    case ErrorID.Barcode:
+                        Barcode_txt.Focus();
+                        break;
+                    case ErrorID.Price:
+                        Price_txt.Focus();
+                        break;
+                    case ErrorID.MinQuantity:
+                        MinQuantity_txt.Focus();
+                        break;
                 }
-                var med = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode == Barcode).ToList();
-                if (med.Count > 0)
-                {
-                    MessageBox.Show($"This Barcode is already used for {med.First().Name}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-
-            if (medicineData.Code != Code)
-            {
-                if (Code.IsNullOrEmpty())
-                {
-                    MessageBox.Show($"Please enter a Code", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Code_txt.Focus();
-                    return;
-                }
-                var med= DbServices.Instance.GetData<Medicine>().Where(m => m.Code == Code).ToList();
-                if (med.Count>0)
-                {
-                    MessageBox.Show($"This Code is already used for {med.First().Name}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-            int? Price ;
-            if(Price_txt.Text=="")
-            {
-                Price = null;
-            }
-            else if (int.TryParse(Price_txt.Text, out int Price1) && Price1 >= 0)
-            {
-                Price = Price1;
-            }
-            else
-            {
-                MessageBox.Show($"Please enter a Valid Postive Integer number in \"Price\" Field!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            
-
-            if (!int.TryParse(MinQuantity_txt.Text, out int MinQuantity) || MinQuantity < 0)
-            {
-                MessageBox.Show($"Please enter a Valid Postive Integer number in \"MinQuantity\" Field!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             /* Update local data  */
             medicineData.Name = Name_txt.Text;
             medicineData.Barcode = Barcode_txt.Text;
             medicineData.Code = Code_txt.Text;
-            medicineData.Price = Price;
-            medicineData.MinimumQuantity = MinQuantity;
+            medicineData.Price = string.IsNullOrEmpty(PriceTXT)?null:int.Parse(PriceTXT);
+            medicineData.MinimumQuantity = string.IsNullOrEmpty(MinQuantityTXT) ?null: int.Parse(MinQuantityTXT);
 
             await UpdateMedicineUsingQueryAsync();
             this.Close();
