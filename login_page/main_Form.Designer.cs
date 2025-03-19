@@ -39,6 +39,7 @@
             drugs_Control = new drugs_Control();
             history_control = new History();
             lowStock_user = new LowStock_usercontrol();
+            remove_q = new Remove_Q();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -127,6 +128,7 @@
             Remove_Qantity.TabIndex = 13;
             Remove_Qantity.Text = "Remove Quantity";
             Remove_Qantity.UseVisualStyleBackColor = false;
+            Remove_Qantity.Click += Remove_Qantity_Click;
             // 
             // Add_Quantity
             // 
@@ -176,12 +178,21 @@
             lowStock_user.Size = new Size(1087, 720);
             lowStock_user.TabIndex = 5;
             // 
+            // remove_q
+            // 
+            remove_q.Dock = DockStyle.Fill;
+            remove_q.Location = new Point(225, 35);
+            remove_q.Name = "remove_q";
+            remove_q.Size = new Size(1087, 720);
+            remove_q.TabIndex = 6;
+            // 
             // main_Form
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(1312, 755);
+            Controls.Add(remove_q);
             Controls.Add(lowStock_user);
             Controls.Add(history_control);
             Controls.Add(drugs_Control);
@@ -209,5 +220,6 @@
         private History history_control;
         private LowStock_usercontrol lowStock_user;
         private Button Low_Stocks_bt;
+        private Remove_Q remove_q;
     }
 }
