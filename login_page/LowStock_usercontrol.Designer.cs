@@ -1,6 +1,6 @@
 ﻿namespace login_page
 {
-    partial class LowStock_Form
+    partial class LowStock_usercontrol
     {
         /// <summary>
         /// Required designer variable.
@@ -41,10 +41,10 @@
             lowStock_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lowStock_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             lowStock_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            lowStock_GV.Location = new Point(0, 96);
+            lowStock_GV.Location = new Point(32, 96);
             lowStock_GV.Name = "lowStock_GV";
             lowStock_GV.RowHeadersWidth = 51;
-            lowStock_GV.Size = new Size(800, 353);
+            lowStock_GV.Size = new Size(961, 510);
             lowStock_GV.TabIndex = 0;
             lowStock_GV.VirtualMode = true;
             // 
@@ -90,20 +90,18 @@
             Reset_btn.UseVisualStyleBackColor = true;
             Reset_btn.Click += Reset_btn_Click;
             // 
-            // LowStock_Form
+            // LowStock_usercontrol
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
             Controls.Add(Reset_btn);
             Controls.Add(search_min_btn);
             Controls.Add(minimum_txt);
             Controls.Add(ignoreZero_checkBox);
             Controls.Add(lowStock_GV);
-            Name = "LowStock_Form";
-            Text = "Low Stock";
-            WindowState = FormWindowState.Maximized;
-            Load += LowStock_Form_Load;
+            Name = "LowStock_usercontrol";
+            Size = new Size(1026, 642);
+            Load += LowStock_usercontrol_Load;
             ((System.ComponentModel.ISupportInitialize)lowStock_GV).EndInit();
             ResumeLayout(false);
             PerformLayout();

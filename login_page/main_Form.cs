@@ -20,49 +20,58 @@ namespace login_page
 
         private void main_Form_Load(object sender, EventArgs e)
         {
+            remove_q.Visible = false;
+            lowStock_user.Visible = false;
             drugs_Control.Visible = false;
+            history_control.Visible = false;
             add_q.Visible = true;
-        }
-
-        private void added_qantity_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lowStock_btn_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            LowStock_Form lowStock_Form = new();
-            lowStock_Form.ShowDialog();
-            this.Close();
-        }
-
-        private void history_btn_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            Form2 form2 = new();
-            form2.ShowDialog();
-            this.Close();
-        }
-
-        //private void AddNewDrug_btn_Click(object sender, EventArgs e)
-        //{
-        //    this.Hide();
-        //    AddNewDrugs_Form addNewDrugs_Form = new();
-        //    addNewDrugs_Form.ShowDialog();
-        //    this.Close();
-        //}
-
-        private void Drugs_bt_Click(object sender, EventArgs e)
-        {
-            add_q.Visible = false;
-            drugs_Control.Visible = true;
         }
 
         private void Add_Quantity_Click(object sender, EventArgs e)
         {
+            remove_q.Visible = false;
+            lowStock_user.Visible = false;
             drugs_Control.Visible = false;
+            history_control.Visible = false;
             add_q.Visible = true;
+        }
+
+        private void Drugs_bt_Click(object sender, EventArgs e)
+        {
+            remove_q.Visible = false;
+            lowStock_user.Visible = false;
+            add_q.Visible = false;
+            history_control.Visible = false;
+            drugs_Control.Visible = true;
+        }
+
+
+
+        private void History_bt_Click(object sender, EventArgs e)
+        {
+            remove_q.Visible = false;
+            lowStock_user.Visible = false;
+            drugs_Control.Visible = false;
+            add_q.Visible = false;
+            history_control.Visible = true;
+        }
+
+        private void Low_Stocks_bt_Click(object sender, EventArgs e)
+        {
+            remove_q.Visible = false;
+            drugs_Control.Visible = false;
+            add_q.Visible = false;
+            history_control.Visible = false;
+            lowStock_user.Visible = true;
+        }
+
+        private void Remove_Qantity_Click(object sender, EventArgs e)
+        {
+            drugs_Control.Visible = false;
+            add_q.Visible = false;
+            history_control.Visible = false;
+            lowStock_user.Visible = false;
+            remove_q.Visible = true;
         }
     }
 }
