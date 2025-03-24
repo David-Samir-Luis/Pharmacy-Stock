@@ -30,6 +30,7 @@
         {
             panel1 = new Panel();
             panel2 = new Panel();
+            pictureBox1 = new PictureBox();
             Low_Stocks_bt = new Button();
             History_bt = new Button();
             Drugs_bt = new Button();
@@ -41,6 +42,7 @@
             lowStock_user = new LowStock_usercontrol();
             remove_q = new Remove_Q();
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -55,6 +57,7 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(33, 11, 97);
+            panel2.Controls.Add(pictureBox1);
             panel2.Controls.Add(Low_Stocks_bt);
             panel2.Controls.Add(History_bt);
             panel2.Controls.Add(Drugs_bt);
@@ -65,6 +68,15 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(225, 720);
             panel2.TabIndex = 1;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = Properties.Resources.add_quantity;
+            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(222, 204);
+            pictureBox1.TabIndex = 17;
+            pictureBox1.TabStop = false;
             // 
             // Low_Stocks_bt
             // 
@@ -204,6 +216,7 @@
             WindowState = FormWindowState.Maximized;
             Load += main_Form_Load;
             panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -221,5 +234,6 @@
         private LowStock_usercontrol lowStock_user;
         private Button Low_Stocks_bt;
         private Remove_Q remove_q;
+        private PictureBox pictureBox1;
     }
 }
