@@ -30,9 +30,10 @@
         {
             lowStock_GV = new DataGridView();
             ignoreZero_checkBox = new CheckBox();
-            minimum_txt = new TextBox();
-            search_min_btn = new Button();
+            Search_txt = new TextBox();
+            search_btn = new Button();
             Reset_btn = new Button();
+            SearchBy_combo = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)lowStock_GV).BeginInit();
             SuspendLayout();
             // 
@@ -44,6 +45,7 @@
             lowStock_GV.Location = new Point(32, 96);
             lowStock_GV.Name = "lowStock_GV";
             lowStock_GV.RowHeadersWidth = 51;
+            lowStock_GV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             lowStock_GV.Size = new Size(961, 510);
             lowStock_GV.TabIndex = 0;
             lowStock_GV.VirtualMode = true;
@@ -51,34 +53,31 @@
             // ignoreZero_checkBox
             // 
             ignoreZero_checkBox.AutoSize = true;
-            ignoreZero_checkBox.Location = new Point(605, 13);
+            ignoreZero_checkBox.Location = new Point(606, 18);
             ignoreZero_checkBox.Name = "ignoreZero_checkBox";
             ignoreZero_checkBox.Size = new Size(178, 24);
             ignoreZero_checkBox.TabIndex = 1;
             ignoreZero_checkBox.Text = "Ignore zero Quantities";
             ignoreZero_checkBox.UseVisualStyleBackColor = true;
             // 
-            // minimum_txt
+            // Search_txt
             // 
-            minimum_txt.ForeColor = Color.Gray;
-            minimum_txt.Location = new Point(166, 42);
-            minimum_txt.Name = "minimum_txt";
-            minimum_txt.Size = new Size(198, 27);
-            minimum_txt.TabIndex = 2;
-            minimum_txt.Text = "Enter Minimum Quantity . . .";
-            minimum_txt.Enter += minimum_txt_Enter;
-            minimum_txt.KeyDown += minimum_txt_KeyDown;
-            minimum_txt.Leave += minimum_txt_Leave;
+            Search_txt.ForeColor = Color.Black;
+            Search_txt.Location = new Point(166, 42);
+            Search_txt.Name = "Search_txt";
+            Search_txt.Size = new Size(198, 27);
+            Search_txt.TabIndex = 2;
+            Search_txt.KeyDown += minimum_txt_KeyDown;
             // 
-            // search_min_btn
+            // search_btn
             // 
-            search_min_btn.Location = new Point(32, 40);
-            search_min_btn.Name = "search_min_btn";
-            search_min_btn.Size = new Size(94, 29);
-            search_min_btn.TabIndex = 3;
-            search_min_btn.Text = "Search";
-            search_min_btn.UseVisualStyleBackColor = true;
-            search_min_btn.Click += search_min_btn_Click;
+            search_btn.Location = new Point(32, 40);
+            search_btn.Name = "search_btn";
+            search_btn.Size = new Size(94, 29);
+            search_btn.TabIndex = 3;
+            search_btn.Text = "Search";
+            search_btn.UseVisualStyleBackColor = true;
+            search_btn.Click += search_btn_Click;
             // 
             // Reset_btn
             // 
@@ -90,13 +89,24 @@
             Reset_btn.UseVisualStyleBackColor = true;
             Reset_btn.Click += Reset_btn_Click;
             // 
+            // SearchBy_combo
+            // 
+            SearchBy_combo.DropDownStyle = ComboBoxStyle.DropDownList;
+            SearchBy_combo.FormattingEnabled = true;
+            SearchBy_combo.Items.AddRange(new object[] { "Quantity", "Expire Date" });
+            SearchBy_combo.Location = new Point(596, 57);
+            SearchBy_combo.Name = "SearchBy_combo";
+            SearchBy_combo.Size = new Size(151, 28);
+            SearchBy_combo.TabIndex = 6;
+            // 
             // LowStock_usercontrol
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(SearchBy_combo);
             Controls.Add(Reset_btn);
-            Controls.Add(search_min_btn);
-            Controls.Add(minimum_txt);
+            Controls.Add(search_btn);
+            Controls.Add(Search_txt);
             Controls.Add(ignoreZero_checkBox);
             Controls.Add(lowStock_GV);
             Name = "LowStock_usercontrol";
@@ -111,8 +121,9 @@
 
         private DataGridView lowStock_GV;
         private CheckBox ignoreZero_checkBox;
-        private TextBox minimum_txt;
-        private Button search_min_btn;
+        private TextBox Search_txt;
+        private Button search_btn;
         private Button Reset_btn;
+        private ComboBox SearchBy_combo;
     }
 }

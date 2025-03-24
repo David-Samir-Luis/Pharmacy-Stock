@@ -83,24 +83,6 @@ namespace login_page
             }
         }
 
-        //private async Task UpdateMedicineUsingQueryAsync()
-        //{
-
-        //    using (var db = new PharmacyStoreContext()) 
-        //    {
-
-        //        await db.Medicines
-        //            .Where(m => m.Id == medicineData.Id)
-        //            .ExecuteUpdateAsync(setters => setters
-        //            .SetProperty(m => m.Barcode, medicineData.Barcode)
-        //            .SetProperty(m => m.Name, medicineData.Name)
-        //            .SetProperty(m => m.MinimumQuantity, medicineData.MinimumQuantity)
-        //            .SetProperty(m => m.Price, medicineData.Price)
-        //            .SetProperty(m => m.Code, medicineData.Code)
-        //            );
-        //    }
-        //}
-
         private async void save_n_Click(object sender, EventArgs e)
         {
             ///todo save the new drug to the database

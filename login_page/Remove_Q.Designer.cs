@@ -42,7 +42,6 @@
             resultContainer = new FlowLayoutPanel();
             panel2 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            StockOperationType = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             contextMenuStrip1.SuspendLayout();
             panel2.SuspendLayout();
@@ -197,28 +196,17 @@
             tableLayoutPanel1.Size = new Size(966, 105);
             tableLayoutPanel1.TabIndex = 33;
             // 
-            // StockOperationType
-            // 
-            StockOperationType.DropDownStyle = ComboBoxStyle.DropDownList;
-            StockOperationType.FormattingEnabled = true;
-            StockOperationType.Items.AddRange(new object[] { "Stock Out", "Stock In" });
-            StockOperationType.Location = new Point(718, 17);
-            StockOperationType.Name = "StockOperationType";
-            StockOperationType.Size = new Size(151, 28);
-            StockOperationType.TabIndex = 17;
-            // 
-            // Add_Q
+            // Remove_Q
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(itemsToBeAdded_GV);
-            Controls.Add(StockOperationType);
             Controls.Add(resultContainer);
             Controls.Add(panel2);
             Controls.Add(searchBy_Combo);
             Controls.Add(search_txt);
             Controls.Add(search_btn);
-            Name = "Add_Q";
+            Name = "Remove_Q";
             Size = new Size(1016, 674);
             Load += Remove_Q1_Load;
             VisibleChanged += Add_Q_VisibleChanged;
@@ -244,7 +232,6 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem1;
-        private ComboBox StockOperationType;
         private TableLayoutPanel tableLayoutPanel1;
     }
 }

@@ -25,9 +25,7 @@ namespace login_page
         BindingList<MedicineGV> itemsToBeAdded_ls = new();
         public Add_Q()
         {
-            InitializeComponent();
-            searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
-            StockOperationType.SelectedIndex = 0; // default is Stock Out 
+            InitializeComponent();           
             itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
@@ -35,7 +33,7 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int InOut_Quantity { get; set; }
+            public int InQuantity { get; set; }
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
             //public string? Barcode { get; }
@@ -46,22 +44,15 @@ namespace login_page
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
-                InOut_Quantity = q;
+                InQuantity = q;
             }
             public int GetID()
             {
                 return medicine.Id;
             }
-            public void UpdateQuantity(string OpType)
+            public void UpdateQuantity()
             {
-                if (OpType == "Stock In")
-                {
-                    medicine.Quantity += InOut_Quantity;
-                }
-                else
-                {
-                    medicine.Quantity -= InOut_Quantity;
-                }
+                medicine.Quantity += InQuantity;
             }
         }
 
@@ -90,7 +81,7 @@ namespace login_page
         public void searchGeneral(string searchText)
         {
             List<Medicine> item;
-            if(string.IsNullOrEmpty(searchText)) return;
+            if (string.IsNullOrEmpty(searchText)) return;
             switch (searchBy_Combo?.SelectedItem?.ToString())
             {
                 //case "Name":
@@ -199,6 +190,7 @@ namespace login_page
 
         private void Add_Q_Load(object sender, EventArgs e)
         {
+            searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
             search_txt.Focus();
             resultContainer.BringToFront();
             // CenterButton();
@@ -210,7 +202,7 @@ namespace login_page
         //    cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
         //}
 
-        private async Task UpdateQuantityUsingQueryAsync()
+        private async Task UpdateQuantityAsync()
         {
             using (var db = new PharmacyStoreContext())
             {
@@ -230,12 +222,11 @@ namespace login_page
                 db.OperationsHistories.Add(new OperationsHistory
                 {
                     OperationTime = DateTime.Now,
-                    OperationType = StockOperationType?.SelectedItem?.ToString() ?? "Stock Out",
-                    //OperationDetails = "Add Quantity to Medicine",
+                    OperationType = "Stock In",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
                         MedicineId = m.GetID(),
-                        Quantity = (short)m.InOut_Quantity
+                        Quantity = (short)m.InQuantity
                     }).ToList()
                 });
                 await db.SaveChangesAsync();
@@ -247,12 +238,12 @@ namespace login_page
             {
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString() ?? "Stock In");
+                    item.UpdateQuantity();
                 }
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
+                await UpdateQuantityAsync(); // save changes to database table medicines
                 await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
                 await DbServices.Instance.LoadDataAsync<OperationsHistory>(); // reload OperationsHistory data 
                 await DbServices.Instance.LoadDataAsync<OperationsMedicine>(); // reload OperationsMedicine data
@@ -343,9 +334,9 @@ namespace login_page
             if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
             {
                 if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
-                {                   
-                        MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        e.Cancel = true; // Cancel the entry and keep focus on the cell
+                {
+                    MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Cancel = true; // Cancel the entry and keep focus on the cell
                 }
             }
         }
@@ -405,6 +396,6 @@ namespace login_page
             {
                 e.SuppressKeyPress = true; // Prevents deletion in edit mode
             }
-        }
+        }      
     }
 }

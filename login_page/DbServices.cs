@@ -32,7 +32,8 @@ namespace login_page
             await Task.WhenAll(
                   Instance.LoadDataAsync<Medicine>(),
                   Instance.LoadDataAsync<OperationsHistory>(),
-                  Instance.LoadDataAsync<OperationsMedicine>()
+                  Instance.LoadDataAsync<OperationsMedicine>(),
+                  Instance.LoadDataAsync<DrugDateStock>()
             );
         }
         public async Task LoadDataAsync<T>() where T : class

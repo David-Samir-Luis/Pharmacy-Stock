@@ -30,17 +30,16 @@ namespace login_page
                     MinimumQuantity = n.MinimumQuantity
                 }).ToList();
         }
-        private void displayLowStock_GV()
+        private void displayLowStockByQuantity_GV()
         {
             IEnumerable<Medicine> medicines_var = DbServices.Instance.GetData<Medicine>();
-            int min;
-            if (!(minimum_txt.Text == "Enter Minimum Quantity . . ."))
+            if (string.IsNullOrEmpty(Search_txt.Text))
             {
-                try
-                {
-                    min = int.Parse(minimum_txt.Text);
-                }
-                catch (Exception)
+                return;
+            }
+            else
+            {
+                if (!int.TryParse(Search_txt.Text, out int min))
                 {
                     MessageBox.Show("Incorrect number!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -48,11 +47,6 @@ namespace login_page
                 min = min <= 0 ? 0 : min;
                 medicines_var = medicines_var.Where(n => (n.Quantity <= min))
                     .ToList();
-            }
-            else
-            {
-                medicines_var = medicines_var.Where(n => (n.Quantity <= n.MinimumQuantity))
-                .ToList();
             }
 
             if (ignoreZero_checkBox.Checked)
@@ -77,17 +71,65 @@ namespace login_page
                 .ToList();
 
         }
+        private void displayLowStockByDate_GV()
+        {
+            IEnumerable<DrugDateStock> medicines_var = DbServices.Instance.GetData<DrugDateStock>();
+                var searchDate= DateOnly.FromDateTime(DateTime.Now);
+
+            if (string.IsNullOrEmpty(Search_txt.Text))
+            {
+                return;
+            }
+            else
+            {
+                if (!int.TryParse(Search_txt.Text, out int searchValue))
+                {
+                    MessageBox.Show("Incorrect number!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+               
+                searchDate = searchValue <= 0 ? DateOnly.FromDateTime(DateTime.Now) : DateOnly.FromDateTime(DateTime.Now.AddMonths(searchValue));
+                medicines_var = DbServices.Instance.GetData<DrugDateStock>().Where(n => n.ExpireDate <= searchDate)
+                    .OrderBy(m => m.ExpireDate).ToList();
+            }
+
+            //if (ignoreZero_checkBox.Checked)
+            //{
+
+            //    medicines_var = medicines_var.Where(n => n.Quantity != 0)
+            //    .ToList();
+            //}
+            //else
+            //{
+            //    // do Nothing
+            //}
+
+            lowStock_GV.DataSource= medicines_var
+                .Select(n => new
+                {
+                    Code = DbServices.Instance.GetData<Medicine>().Find(n2=>n2.Id==n.MedicineId)?.Code,
+                    Name = DbServices.Instance.GetData<Medicine>().Find(n2 => n2.Id == n.MedicineId)?.Name,
+                    TotalQuantity = DbServices.Instance.GetData<Medicine>().Find(n2 => n2.Id == n.MedicineId)?.Quantity,
+                    ExpQuantity = n.Quantity,
+                    ExpireDate = n.ExpireDate.ToString("MM/yy")
+                }).ToList();
+
+            lowStock_GV.Columns["TotalQuantity"].HeaderText = "Total Quantity";
+            lowStock_GV.Columns["ExpQuantity"].HeaderText = "Expire Date Quantity";
+            lowStock_GV.Columns["ExpireDate"].HeaderText = "Expiry Date (MM/YY)";
+        }
 
         private void LowStock_usercontrol_Load(object sender, EventArgs e)
         {
             LoadMedicinesOnGridView();
+            SearchBy_combo.SelectedIndex = 0; // default is search by Barcode
         }
 
         private void Reset_btn_Click(object sender, EventArgs e)
         {
+            Search_txt.Text = "";
             ignoreZero_checkBox.Checked = false;
-            minimum_txt.Text = "Enter Minimum Quantity . . .";  // Restore placeholder
-            minimum_txt.ForeColor = Color.Gray;  // Set text color to gray
+            SearchBy_combo.SelectedIndex = 0;
             lowStock_GV.DataSource = DbServices.Instance.GetData<Medicine>().Where(n => n.Quantity <= n.MinimumQuantity)
                 .Select(n => new
                 {
@@ -98,37 +140,27 @@ namespace login_page
                 }).ToList();
         }
 
-        private void search_min_btn_Click(object sender, EventArgs e)
+        private void search_btn_Click(object sender, EventArgs e)
         {
-            displayLowStock_GV();
+            if (SearchBy_combo.SelectedIndex == 0) // search by qantity
+            {
+                displayLowStockByQuantity_GV(); 
+            }
+            else // search by Expiry Date
+            {
+                displayLowStockByDate_GV();
+            }
+            
         }
 
         private void minimum_txt_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                search_min_btn_Click(sender, e);
+                search_btn_Click(sender, e);
             }
         }
 
-        private void minimum_txt_Enter(object sender, EventArgs e)
-        {
-            if (minimum_txt.Text == "Enter Minimum Quantity . . ." && minimum_txt.ForeColor == Color.Gray)
-            {
-                minimum_txt.Text = "";  // Clear the placeholder
-                minimum_txt.ForeColor = Color.Black;  // Set text color to black
-            }
-        }
-
-        private void minimum_txt_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(minimum_txt.Text))
-            {
-                minimum_txt.Text = "Enter Minimum Quantity . . .";  // Restore placeholder
-                minimum_txt.ForeColor = Color.Gray;  // Set text color to gray
-            }
-        }
-
-       
+        
     }
 }

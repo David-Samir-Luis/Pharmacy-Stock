@@ -30,6 +30,7 @@
         {
             dataGridView1 = new DataGridView();
             dataGridView2 = new DataGridView();
+            Refresh_btn = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
@@ -60,10 +61,21 @@
             dataGridView2.Size = new Size(951, 249);
             dataGridView2.TabIndex = 1;
             // 
+            // Refresh_btn
+            // 
+            Refresh_btn.Location = new Point(46, 12);
+            Refresh_btn.Name = "Refresh_btn";
+            Refresh_btn.Size = new Size(94, 29);
+            Refresh_btn.TabIndex = 2;
+            Refresh_btn.Text = "Rrefresh";
+            Refresh_btn.UseVisualStyleBackColor = true;
+            Refresh_btn.Click += Refresh_btn_Click;
+            // 
             // History
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(Refresh_btn);
             Controls.Add(dataGridView2);
             Controls.Add(dataGridView1);
             Name = "History";
@@ -78,5 +90,6 @@
 
         private DataGridView dataGridView1;
         private DataGridView dataGridView2;
+        private Button Refresh_btn;
     }
 }

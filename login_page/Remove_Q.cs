@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,7 +28,6 @@ namespace login_page
         {
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
-            StockOperationType.SelectedIndex = 0; // default is Stock Out 
             itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
@@ -35,7 +35,7 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int InOut_Quantity { get; set; }
+            public int Out_Quantity { get; set; }
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
             //public string? Barcode { get; }
@@ -46,22 +46,15 @@ namespace login_page
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
-                InOut_Quantity = q;
+                Out_Quantity = q;
             }
             public int GetID()
             {
                 return medicine.Id;
             }
-            public void UpdateQuantity(string OpType)
+            public void UpdateQuantity()
             {
-                if (OpType == "Stock In")
-                {
-                    medicine.Quantity += InOut_Quantity;
-                }
-                else
-                {
-                    medicine.Quantity -= InOut_Quantity;
-                }
+                medicine.Quantity -= Out_Quantity;
             }
         }
 
@@ -210,7 +203,7 @@ namespace login_page
         //    cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
         //}
 
-        private async Task UpdateQuantityUsingQueryAsync()
+        private async Task UpdateQuantityAsync()
         {
             using (var db = new PharmacyStoreContext())
             {
@@ -230,12 +223,11 @@ namespace login_page
                 db.OperationsHistories.Add(new OperationsHistory
                 {
                     OperationTime = DateTime.Now,
-                    OperationType = StockOperationType?.SelectedItem?.ToString() ?? "Stock Out",
-                    //OperationDetails = "Add Quantity to Medicine",
+                    OperationType= "Stock Out",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
                         MedicineId = m.GetID(),
-                        Quantity = (short)m.InOut_Quantity
+                        Quantity = (short)m.Out_Quantity
                     }).ToList()
                 });
                 await db.SaveChangesAsync();
@@ -243,16 +235,31 @@ namespace login_page
         }
         private async void save_n_Click(object sender, EventArgs e)
         {
+            const int NAME_CELL_INDEX= 1;
+            const int OUT_QUANTITY_CELL_INDEX= 2;
+            const int STOCK_CELL_INDEX= 3;
+
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
             {
+                foreach (DataGridViewRow row in itemsToBeAdded_GV.Rows)
+                {
+                    if ((int)row.Cells[OUT_QUANTITY_CELL_INDEX].Value > (int)row.Cells[STOCK_CELL_INDEX].Value)
+                    {
+                        MessageBox.Show($"The quantity of ({row.Cells[NAME_CELL_INDEX].Value}) is more than the stock!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        itemsToBeAdded_GV.CurrentCell = row.Cells[OUT_QUANTITY_CELL_INDEX]; // Focus on the matching row
+                        itemsToBeAdded_GV.BeginEdit(true); // Optional: highlight the row
+                        return; // Stop after finding the first match
+                    }
+                }
+
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString() ?? "Stock In");
+                    item.UpdateQuantity();
                 }
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
+                await UpdateQuantityAsync(); // save changes to database table medicines
                 await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
                 await DbServices.Instance.LoadDataAsync<OperationsHistory>(); // reload OperationsHistory data 
                 await DbServices.Instance.LoadDataAsync<OperationsMedicine>(); // reload OperationsMedicine data
