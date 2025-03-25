@@ -29,6 +29,7 @@ namespace login_page
 
         private void Add_Quantity_Click(object sender, EventArgs e)
         {
+            pictureBox1.Image = Properties.Resources.add_quantity;
             remove_q.Visible = false;
             lowStock_user.Visible = false;
             drugs_Control.Visible = false;
@@ -38,6 +39,7 @@ namespace login_page
 
         private void Drugs_bt_Click(object sender, EventArgs e)
         {
+            pictureBox1.Image = Properties.Resources.drugs;
             remove_q.Visible = false;
             lowStock_user.Visible = false;
             add_q.Visible = false;
@@ -49,6 +51,7 @@ namespace login_page
 
         private void History_bt_Click(object sender, EventArgs e)
         {
+            /// todo: add the history image
             remove_q.Visible = false;
             lowStock_user.Visible = false;
             drugs_Control.Visible = false;
@@ -58,20 +61,25 @@ namespace login_page
 
         private void Low_Stocks_bt_Click(object sender, EventArgs e)
         {
+            pictureBox1.Image = Properties.Resources.low_stock;
             remove_q.Visible = false;
             drugs_Control.Visible = false;
             add_q.Visible = false;
             history_control.Visible = false;
             lowStock_user.Visible = true;
+
         }
 
         private void Remove_Qantity_Click(object sender, EventArgs e)
         {
+            pictureBox1.Image = Properties.Resources.remove_quantity;
             drugs_Control.Visible = false;
             add_q.Visible = false;
             history_control.Visible = false;
             lowStock_user.Visible = false;
             remove_q.Visible = true;
         }
+
+      
     }
 }
