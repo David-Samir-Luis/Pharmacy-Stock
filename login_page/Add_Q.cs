@@ -36,11 +36,10 @@ namespace login_page
             public int InQuantity { get; set; }
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
+            public string Date { get; set; } = "00/00";
             //public string? Barcode { get; }
             //public DateOnly ExpiryDate { get; set; }
-
             //public int? MinimumQuantity { get; set; }
-
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
@@ -331,12 +330,15 @@ namespace login_page
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
+            if (itemsToBeAdded_GV.CurrentCell.ColumnIndex==2) // column index of InQuantity
             {
-                if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
+                if (!string.IsNullOrWhiteSpace(e.FormattedValue?.ToString()))
                 {
-                    MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    if (!int.TryParse(e.FormattedValue.ToString(), out int number) || number < 0)
+                    {
+                        MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    }
                 }
             }
         }

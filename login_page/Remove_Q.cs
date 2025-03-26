@@ -347,12 +347,15 @@ namespace login_page
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
+            if (e.ColumnIndex == 2) // Column index of the Quantity column
             {
-                if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
-                {                   
+                if (!string.IsNullOrWhiteSpace(e.FormattedValue?.ToString()))
+                {
+                    if (!int.TryParse(e.FormattedValue.ToString(), out int number) || number < 0)
+                    {
                         MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    }
                 }
             }
         }

@@ -35,7 +35,7 @@ namespace login_page
             IEnumerable<Medicine> medicines_var = DbServices.Instance.GetData<Medicine>();
             if (string.IsNullOrEmpty(Search_txt.Text))
             {
-                return;
+                //return;
             }
             else
             {
@@ -78,7 +78,7 @@ namespace login_page
 
             if (string.IsNullOrEmpty(Search_txt.Text))
             {
-                return;
+                //return;
             }
             else
             {
