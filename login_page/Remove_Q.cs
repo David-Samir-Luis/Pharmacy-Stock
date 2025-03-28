@@ -99,14 +99,12 @@ namespace login_page
                 case "Barcode":
                     ///to do search by barcode 
                     item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode?.ToLower().Trim() == searchText).ToList();
-                    search_txt.Text = "";
                     break;
                 case "Code":
                     ///to do search by code 
                     item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code?.ToLower().Trim() == searchText).ToList();
                     break;
                 default:
-                    MessageBox.Show("Please select a valid search type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     item = null;
                     break;
             }
@@ -119,8 +117,8 @@ namespace login_page
             }
             else
             {
-                MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 search_txt.Focus();
+                search_txt.SelectAll();
             }
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
@@ -284,8 +282,8 @@ namespace login_page
 
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
-                search_txt.Text = "";
                 search_txt.Focus();
+                search_txt.SelectAll();
             }
         }
         private void SearchByname(string name)

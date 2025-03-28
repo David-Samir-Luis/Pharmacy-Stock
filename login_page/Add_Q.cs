@@ -98,14 +98,12 @@ namespace login_page
                 case "Barcode":
                     ///to do search by barcode 
                     item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode?.ToLower().Trim() == searchText).ToList();
-                    search_txt.Text = "";
                     break;
                 case "Code":
                     ///to do search by code 
                     item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code?.ToLower().Trim() == searchText).ToList();
                     break;
                 default:
-                    MessageBox.Show("Please select a valid search type!", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     item = null;
                     break;
             }
@@ -118,8 +116,8 @@ namespace login_page
             }
             else
             {
-                MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 search_txt.Focus();
+                search_txt.SelectAll();
             }
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
@@ -281,8 +279,8 @@ namespace login_page
                 }
                 else if (e.ColumnIndex == (int)GVColumnsIndex.Date)
                 {
-                    search_txt.Text = "";
-                    search_txt.Focus(); 
+                    search_txt.Focus();
+                    search_txt.SelectAll();
                 }
             }
         }
@@ -461,8 +459,6 @@ namespace login_page
                 // allow only 4 characters maximum , 1 or 2 digits for the month and 2 digits for the year
                 if (textBox.Text.Length==4) e.Handled = true; // Prevent extra typing
             }
-        }
-
-        
+        }       
     }
 }
