@@ -13,13 +13,22 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace login_page
 {
     public partial class Add_Q : UserControl
     {
+        enum GVColumnsIndex
+        {
+            Code,
+            Name,
+            Stock,
+            Price,
+            InQuantity,
+            Date
+        }
 
         List<Medicine> itemNames;
         BindingList<MedicineGV> itemsToBeAdded_ls = new();
@@ -33,10 +42,10 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int InQuantity { get; set; }
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
-            public string Date { get; set; } = "00/00";
+            public int InQuantity { get; set; }
+            public string Date { get; set; }
             //public string? Barcode { get; }
             //public DateOnly ExpiryDate { get; set; }
             //public int? MinimumQuantity { get; set; }
@@ -96,7 +105,7 @@ namespace login_page
                     item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code?.ToLower().Trim() == searchText).ToList();
                     break;
                 default:
-                    MessageBox.Show("Please select a valid search type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select a valid search type!", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     item = null;
                     break;
             }
@@ -104,7 +113,7 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.InQuantity];
                 itemsToBeAdded_GV.BeginEdit(true);
             }
             else
@@ -264,8 +273,17 @@ namespace login_page
 
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
-                search_txt.Text = "";
-                search_txt.Focus();
+                if (e.ColumnIndex == (int)GVColumnsIndex.InQuantity)
+                {
+                    // move the focus to the next cell (date cell)
+                    itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[(int)GVColumnsIndex.Date];
+                    itemsToBeAdded_GV.BeginEdit(true);
+                }
+                else if (e.ColumnIndex == (int)GVColumnsIndex.Date)
+                {
+                    search_txt.Text = "";
+                    search_txt.Focus(); 
+                }
             }
         }
         private void SearchByname(string name)
@@ -330,7 +348,7 @@ namespace login_page
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (itemsToBeAdded_GV.CurrentCell.ColumnIndex==2) // column index of InQuantity
+            if (itemsToBeAdded_GV.CurrentCell.ColumnIndex==(int)GVColumnsIndex.InQuantity) // column index of InQuantity
             {
                 if (!string.IsNullOrWhiteSpace(e.FormattedValue?.ToString()))
                 {
@@ -370,7 +388,7 @@ namespace login_page
             Medicine item;
             item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name == name.Trim()).First();
             itemsToBeAdded_ls.Add(new MedicineGV(item, 1));
-            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.InQuantity];
             itemsToBeAdded_GV.BeginEdit(true);
         }
 
@@ -384,12 +402,38 @@ namespace login_page
 
         private void itemsToBeAdded_GV_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (e.Control is System.Windows.Forms.TextBox textBox)
+            if (itemsToBeAdded_GV.CurrentCell.ColumnIndex == (int)GVColumnsIndex.Date && e.Control is System.Windows.Forms.TextBox textBox)
+            {
+                textBox.KeyPress -= TextBox_KeyPress;
+                textBox.Leave -= TextBox_Leave;
+
+                textBox.KeyPress += TextBox_KeyPress;
+                textBox.Leave += TextBox_Leave;
+            }
+
+            if (e.Control is System.Windows.Forms.TextBox textBox1)
             {
                 // Remove old event handlers to avoid duplicates
-                textBox.KeyDown -= TextBox_KeyDown;
-                textBox.KeyDown += TextBox_KeyDown;
+                textBox1.KeyDown -= TextBox_KeyDown;
+                textBox1.KeyDown += TextBox_KeyDown;
             }
+        }
+
+        private void TextBox_Leave(object? sender, EventArgs e)
+        {
+            TextBox? textBox = sender as TextBox;
+            if (textBox?.Text?.Length > 0 && textBox?.Text?.Length < 3)
+            {
+                MessageBox.Show("Please enter a valid date.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (textBox?.Text?.Length == 3) // if the user entered 3 digits (example 125 => 1/25 )
+            {
+                textBox.Text = $"0{textBox?.Text?.Substring(0, 1)}/20{textBox?.Text?.Substring(1, 2)}";
+            }
+            else if (textBox?.Text?.Length == 4) // if the user entered 4 digits (example 1125 => 11/25 )
+            {
+                textBox.Text = $"{textBox?.Text?.Substring(0, 2)}/20{textBox?.Text?.Substring(2, 2)}";
+            }    
         }
 
         private void TextBox_KeyDown(object? sender, KeyEventArgs e)
@@ -398,6 +442,27 @@ namespace login_page
             {
                 e.SuppressKeyPress = true; // Prevents deletion in edit mode
             }
-        }      
+        }
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextBox? textBox = sender as TextBox;
+
+            // the column should allow only numbers ,and any character except numbers should be blocked (ignored)
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true; // Block non-numeric input
+                return;
+            }
+
+            int? pos = textBox?.SelectionStart;
+
+            if (char.IsDigit(e.KeyChar))
+            {
+                // allow only 4 characters maximum , 1 or 2 digits for the month and 2 digits for the year
+                if (textBox.Text.Length==4) e.Handled = true; // Prevent extra typing
+            }
+        }
+
+        
     }
 }

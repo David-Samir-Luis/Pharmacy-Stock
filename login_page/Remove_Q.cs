@@ -21,7 +21,14 @@ namespace login_page
 {
     public partial class Remove_Q : UserControl
     {
-
+        enum GVColumnsIndex
+        {
+            Code ,
+            Name ,
+            Stock ,
+            Price ,
+            Out_Quantity
+        }
         List<Medicine> itemNames;
         BindingList<MedicineGV> itemsToBeAdded_ls = new();
         public Remove_Q()
@@ -35,9 +42,9 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int Out_Quantity { get; set; }
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
+            public int Out_Quantity { get; set; }
             //public string? Barcode { get; }
             //public DateOnly ExpiryDate { get; set; }
 
@@ -107,7 +114,7 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.Out_Quantity];
                 itemsToBeAdded_GV.BeginEdit(true);
             }
             else
@@ -235,18 +242,14 @@ namespace login_page
         }
         private async void save_n_Click(object sender, EventArgs e)
         {
-            const int NAME_CELL_INDEX= 1;
-            const int OUT_QUANTITY_CELL_INDEX= 2;
-            const int STOCK_CELL_INDEX= 3;
-
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
             {
                 foreach (DataGridViewRow row in itemsToBeAdded_GV.Rows)
                 {
-                    if ((int)row.Cells[OUT_QUANTITY_CELL_INDEX].Value > (int)row.Cells[STOCK_CELL_INDEX].Value)
+                    if ((int)row.Cells[(int)GVColumnsIndex.Out_Quantity].Value > (int)row.Cells[(int)GVColumnsIndex.Stock].Value)
                     {
-                        MessageBox.Show($"The quantity of ({row.Cells[NAME_CELL_INDEX].Value}) is more than the stock!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        itemsToBeAdded_GV.CurrentCell = row.Cells[OUT_QUANTITY_CELL_INDEX]; // Focus on the matching row
+                        MessageBox.Show($"The quantity of ({row.Cells[(int)GVColumnsIndex.Name].Value}) is more than the stock!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        itemsToBeAdded_GV.CurrentCell = row.Cells[(int)GVColumnsIndex.Out_Quantity]; // Focus on the matching row
                         itemsToBeAdded_GV.BeginEdit(true); // Optional: highlight the row
                         return; // Stop after finding the first match
                     }
@@ -347,7 +350,7 @@ namespace login_page
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (e.ColumnIndex == 2) // Column index of the Quantity column
+            if (e.ColumnIndex == (int)GVColumnsIndex.Out_Quantity) // Column index of the Quantity column
             {
                 if (!string.IsNullOrWhiteSpace(e.FormattedValue?.ToString()))
                 {
@@ -387,7 +390,7 @@ namespace login_page
             Medicine item;
             item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name == name.Trim()).First();
             itemsToBeAdded_ls.Add(new MedicineGV(item, 1));
-            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.Out_Quantity];
             itemsToBeAdded_GV.BeginEdit(true);
         }
 

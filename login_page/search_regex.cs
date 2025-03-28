@@ -14,6 +14,13 @@ namespace login_page
 {
     public partial class search_regex : Form
     {
+        enum GVColumnsIndex
+        {
+            Code,
+            Name,
+            Price
+        }
+
         Action<string> callback_func;
         List<MedicineGV> itemsToBeAdded_ls = new();
         public search_regex(Action<string> call )
@@ -104,7 +111,7 @@ namespace login_page
             if (e.RowIndex >= 0)
             {
                 // Get the selected row
-               string name = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[1].Value?.ToString();
+               string name = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[(int)GVColumnsIndex.Name].Value?.ToString();
                 callback_func?.Invoke(name);
 
             }

@@ -61,9 +61,17 @@ namespace login_page
             {
                 DateTime cutoffDate = DateTime.Now.AddDays(-30); // 30 days ago
 
-                int deletedRows = db.Database.ExecuteSqlRaw(
-                    "DELETE FROM Operations_History WHERE Operation_Time < {0}", cutoffDate);
+                try
+                {
+                    int deletedRows = db.Database.ExecuteSqlRaw(
+                                "DELETE FROM Operations_History WHERE Operation_Time < {0}", cutoffDate);
 
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show($"restart server (MSSQL$SQLEXPRESS02) from services ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw;
+                }
                 //MessageBox.Show($"Deleted {deletedRows} old records.");
             }
         }
