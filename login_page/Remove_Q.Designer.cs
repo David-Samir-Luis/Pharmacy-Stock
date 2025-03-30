@@ -43,6 +43,7 @@
             panel2 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             StockOperationType = new ComboBox();
+            expirationDatesToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             contextMenuStrip1.SuspendLayout();
             panel2.SuspendLayout();
@@ -111,21 +112,21 @@
             // 
             contextMenuStrip1.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             contextMenuStrip1.ImageScalingSize = new Size(20, 20);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { deleteToolStripMenuItem, deleteToolStripMenuItem1 });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { deleteToolStripMenuItem, deleteToolStripMenuItem1, expirationDatesToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(130, 60);
+            contextMenuStrip1.Size = new Size(211, 116);
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(129, 28);
+            deleteToolStripMenuItem.Size = new Size(210, 28);
             deleteToolStripMenuItem.Text = "Edit";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem1
             // 
             deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            deleteToolStripMenuItem1.Size = new Size(129, 28);
+            deleteToolStripMenuItem1.Size = new Size(210, 28);
             deleteToolStripMenuItem1.Text = "Delete";
             deleteToolStripMenuItem1.Click += deleteToolStripMenuItem1_Click;
             // 
@@ -207,7 +208,14 @@
             StockOperationType.Size = new Size(151, 28);
             StockOperationType.TabIndex = 17;
             // 
-            // Add_Q
+            // expirationDatesToolStripMenuItem
+            // 
+            expirationDatesToolStripMenuItem.Name = "expirationDatesToolStripMenuItem";
+            expirationDatesToolStripMenuItem.Size = new Size(210, 28);
+            expirationDatesToolStripMenuItem.Text = "Expiration dates";
+            expirationDatesToolStripMenuItem.Click += expirationDatesToolStripMenuItem_Click;
+            // 
+            // Remove_Q
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -218,7 +226,7 @@
             Controls.Add(searchBy_Combo);
             Controls.Add(search_txt);
             Controls.Add(search_btn);
-            Name = "Add_Q";
+            Name = "Remove_Q";
             Size = new Size(1016, 674);
             Load += Remove_Q1_Load;
             VisibleChanged += Add_Q_VisibleChanged;
@@ -246,5 +254,6 @@
         private ToolStripMenuItem deleteToolStripMenuItem1;
         private ComboBox StockOperationType;
         private TableLayoutPanel tableLayoutPanel1;
+        private ToolStripMenuItem expirationDatesToolStripMenuItem;
     }
 }

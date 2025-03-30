@@ -343,9 +343,9 @@ namespace login_page
             if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
             {
                 if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
-                {                   
-                        MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        e.Cancel = true; // Cancel the entry and keep focus on the cell
+                {
+                    MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Cancel = true; // Cancel the entry and keep focus on the cell
                 }
             }
         }
@@ -405,6 +405,12 @@ namespace login_page
             {
                 e.SuppressKeyPress = true; // Prevents deletion in edit mode
             }
+        }
+
+        private void expirationDatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Expiration_dates expiration = new();
+            expiration.ShowDialog();
         }
     }
 }
