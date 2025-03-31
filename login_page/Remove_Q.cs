@@ -417,5 +417,11 @@ namespace login_page
                 e.SuppressKeyPress = true; // Prevents deletion in edit mode
             }
         }
+
+        private void expirationDatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Expiration_dates expiration = new();
+            expiration.ShowDialog();
+        }
     }
 }

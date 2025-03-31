@@ -394,7 +394,7 @@ namespace login_page
             DeleteRow();
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //if (itemsToBeAdded_GV.SelectedCells.Count > 0)
             //{
@@ -483,6 +483,12 @@ namespace login_page
                 e.SuppressKeyPress = true; // Prevents deletion in edit mode
             }
         }
+        private void expirationDatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Expiration_dates expiration = new();
+            expiration.ShowDialog();
+        }
+
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBox? textBox = sender as TextBox;

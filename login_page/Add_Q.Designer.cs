@@ -29,14 +29,15 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             searchBy_Combo = new ComboBox();
             search_txt = new TextBox();
             search_btn = new Button();
             itemsToBeAdded_GV = new DataGridView();
-            contextMenuStrip1 = new ContextMenuStrip(components);
-            deleteToolStripMenuItem = new ToolStripMenuItem();
+            contextMenuStrip_n = new ContextMenuStrip(components);
+            editToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem1 = new ToolStripMenuItem();
+            expirationDatesToolStripMenuItem = new ToolStripMenuItem();
             save_n = new Button();
             cancel_n = new Button();
             resultContainer = new FlowLayoutPanel();
@@ -44,7 +45,7 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
-            contextMenuStrip1.SuspendLayout();
+            contextMenuStrip_n.SuspendLayout();
             panel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -85,16 +86,16 @@
             // 
             itemsToBeAdded_GV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             itemsToBeAdded_GV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(33, 11, 97);
-            dataGridViewCellStyle1.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(33, 11, 97);
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(33, 11, 97);
+            dataGridViewCellStyle2.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(33, 11, 97);
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            itemsToBeAdded_GV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             itemsToBeAdded_GV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            itemsToBeAdded_GV.ContextMenuStrip = contextMenuStrip1;
+            itemsToBeAdded_GV.ContextMenuStrip = contextMenuStrip_n;
             itemsToBeAdded_GV.EnableHeadersVisualStyles = false;
             itemsToBeAdded_GV.Location = new Point(25, 54);
             itemsToBeAdded_GV.Name = "itemsToBeAdded_GV";
@@ -107,27 +108,34 @@
             itemsToBeAdded_GV.CellValueChanged += itemsToBeAdded_GV_CellValueChanged;
             itemsToBeAdded_GV.EditingControlShowing += itemsToBeAdded_GV_EditingControlShowing;
             // 
-            // contextMenuStrip1
+            // contextMenuStrip_n
             // 
-            contextMenuStrip1.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            contextMenuStrip1.ImageScalingSize = new Size(20, 20);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { deleteToolStripMenuItem, deleteToolStripMenuItem1 });
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(130, 60);
+            contextMenuStrip_n.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            contextMenuStrip_n.ImageScalingSize = new Size(20, 20);
+            contextMenuStrip_n.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem, deleteToolStripMenuItem1, expirationDatesToolStripMenuItem });
+            contextMenuStrip_n.Name = "contextMenuStrip1";
+            contextMenuStrip_n.Size = new Size(211, 116);
             // 
-            // deleteToolStripMenuItem
+            // editToolStripMenuItem
             // 
-            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(129, 28);
-            deleteToolStripMenuItem.Text = "Edit";
-            deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(210, 28);
+            editToolStripMenuItem.Text = "Edit";
+            editToolStripMenuItem.Click += editToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem1
             // 
             deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            deleteToolStripMenuItem1.Size = new Size(129, 28);
+            deleteToolStripMenuItem1.Size = new Size(210, 28);
             deleteToolStripMenuItem1.Text = "Delete";
             deleteToolStripMenuItem1.Click += deleteToolStripMenuItem1_Click;
+            // 
+            // expirationDatesToolStripMenuItem
+            // 
+            expirationDatesToolStripMenuItem.Name = "expirationDatesToolStripMenuItem";
+            expirationDatesToolStripMenuItem.Size = new Size(210, 28);
+            expirationDatesToolStripMenuItem.Text = "Expiration dates";
+            expirationDatesToolStripMenuItem.Click += expirationDatesToolStripMenuItem_Click;
             // 
             // save_n
             // 
@@ -219,7 +227,7 @@
             Load += Add_Q_Load;
             VisibleChanged += Add_Q_VisibleChanged;
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).EndInit();
-            contextMenuStrip1.ResumeLayout(false);
+            contextMenuStrip_n.ResumeLayout(false);
             panel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
@@ -237,10 +245,11 @@
         private Button cancel_n;
         private Panel panel2;
         private FlowLayoutPanel resultContainer;
-        private ContextMenuStrip contextMenuStrip1;
-        private ToolStripMenuItem deleteToolStripMenuItem;
+        private ContextMenuStrip contextMenuStrip_n;
+        private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem1;
         private TableLayoutPanel tableLayoutPanel1;
+        private ToolStripMenuItem expirationDatesToolStripMenuItem;
         private Label label1;
     }
 }
