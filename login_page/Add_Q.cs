@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
@@ -27,7 +28,7 @@ namespace login_page
             Stock,
             Price,
             InQuantity,
-            Date
+            ExpireDate
         }
 
         List<Medicine> itemNames;
@@ -45,10 +46,8 @@ namespace login_page
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
             public int InQuantity { get; set; }
-            public string Date { get; set; }
-            //public string? Barcode { get; }
-            //public DateOnly ExpiryDate { get; set; }
-            //public int? MinimumQuantity { get; set; }
+            [DisplayName("Expire Date")] // display name in the DataGridView
+            public string ExpireDate { get; set; }
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
@@ -66,13 +65,9 @@ namespace login_page
 
         void ResetPanel()
         {
-            // Reset panel
             search_txt.Text = "";
             itemsToBeAdded_ls.Clear(); // clear the list 
             search_txt.Focus();
-            // reset gridview 
-            //itemsToBeAdded_GV.DataSource = null;
-            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -162,12 +157,6 @@ namespace login_page
             if (keyData == (Keys.Control | Keys.Delete))
             {
                 DeleteRow();
-                //if (itemsToBeAdded_ls.Count >= 0)
-                //{
-                //    itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
-                //    itemsToBeAdded_GV.DataSource = null;
-                //    itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
-                //}
             }
             if (keyData == Keys.Insert)
             {
@@ -238,6 +227,41 @@ namespace login_page
                 await db.SaveChangesAsync();
             }
         }
+        private async Task AddNewRowInDrugDateStockAsync()
+        {
+            //TODO: parse the date and add it to the database as Dateonly
+            using (var db = new PharmacyStoreContext())
+            {
+                foreach (var item in itemsToBeAdded_ls)
+                {
+                    DateOnly ExpireDate;                
+                    if (!DateOnly.TryParseExact($"01/{item.ExpireDate}", "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ExpireDate))
+                    {
+                        MessageBox.Show("Invalid date", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    
+                    var drugDateStock=DbServices.Instance.GetData<DrugDateStock>().Find(m => (m.MedicineId == item.GetID() && (m.ExpireDate == ExpireDate)));
+                    
+                    if (drugDateStock is not null) // if the record already exists
+                    {
+                       drugDateStock.Quantity += item.InQuantity;
+                    }
+                    else
+                    {
+                        db.DrugDateStocks.Add(new DrugDateStock
+                        {
+                            MedicineId = item.GetID(),
+                            Quantity = item.InQuantity,
+                            ExpireDate = ExpireDate
+                        });
+                    }
+                    
+                }
+               
+                await db.SaveChangesAsync();
+            }
+        }
         private async void save_n_Click(object sender, EventArgs e)
         {
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
@@ -255,15 +279,22 @@ namespace login_page
                 await DbServices.Instance.LoadDataAsync<OperationsMedicine>(); // reload OperationsMedicine data
                 ResetPanel();
             }
-            else
-            {
-                MessageBox.Show("NO items to be saved.", "Can't save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //else
+            //{
+            //    MessageBox.Show("NO items to be saved.", "Can't save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
         }
 
         private void cancel_n_Click(object sender, EventArgs e)
         {
-            ResetPanel();
+            //DateOnly ExpireDate ;
+            //DateOnly.TryParseExact($"01/{itemsToBeAdded_ls[0].ExpireDate}", "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ExpireDate);
+            //MessageBox.Show($"{ExpireDate}");
+            DialogResult result = MessageBox.Show("Are you sure you want to cancel changes ?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                ResetPanel();
+            }
         }
 
         private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -274,10 +305,10 @@ namespace login_page
                 if (e.ColumnIndex == (int)GVColumnsIndex.InQuantity)
                 {
                     // move the focus to the next cell (date cell)
-                    itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[(int)GVColumnsIndex.Date];
+                    itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[(int)GVColumnsIndex.ExpireDate];
                     itemsToBeAdded_GV.BeginEdit(true);
                 }
-                else if (e.ColumnIndex == (int)GVColumnsIndex.Date)
+                else if (e.ColumnIndex == (int)GVColumnsIndex.ExpireDate)
                 {
                     search_txt.Focus();
                     search_txt.SelectAll();
@@ -400,38 +431,49 @@ namespace login_page
 
         private void itemsToBeAdded_GV_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (itemsToBeAdded_GV.CurrentCell.ColumnIndex == (int)GVColumnsIndex.Date && e.Control is System.Windows.Forms.TextBox textBox)
+            if (e.Control is TextBox textBox)
             {
-                textBox.KeyPress -= TextBox_KeyPress;
-                textBox.Leave -= TextBox_Leave;
+                if (itemsToBeAdded_GV.CurrentCell.ColumnIndex == (int)GVColumnsIndex.ExpireDate )
+                {
+                    textBox.KeyPress -= TextBox_KeyPress;
+                    textBox.Leave -= TextBox_Leave;
 
-                textBox.KeyPress += TextBox_KeyPress;
-                textBox.Leave += TextBox_Leave;
-            }
-
-            if (e.Control is System.Windows.Forms.TextBox textBox1)
-            {
+                    textBox.KeyPress += TextBox_KeyPress;
+                    textBox.Leave += TextBox_Leave;
+                    textBox.Name = "ExpireDate";
+                }
+                else
+                {
+                    textBox.Name = "InQuantity";
+                }
                 // Remove old event handlers to avoid duplicates
-                textBox1.KeyDown -= TextBox_KeyDown;
-                textBox1.KeyDown += TextBox_KeyDown;
+                textBox.KeyDown -= TextBox_KeyDown;
+                    textBox.KeyDown += TextBox_KeyDown;
             }
         }
 
         private void TextBox_Leave(object? sender, EventArgs e)
         {
             TextBox? textBox = sender as TextBox;
-            if (textBox?.Text?.Length > 0 && textBox?.Text?.Length < 3)
+            if (textBox is not null && textBox.Name== "ExpireDate")
             {
-                MessageBox.Show("Please enter a valid date.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (textBox?.Text?.Length > 0 && textBox?.Text?.Length < 3)
+                {
+                    MessageBox.Show("Please enter a valid date. (725) or (0725) ", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else if (textBox?.Text?.Length == 3) // if the user entered 3 digits (example 125 => 1/25 )
+                {
+                    textBox.Text = $"0{textBox?.Text?.Substring(0, 1)}/20{textBox?.Text?.Substring(1, 2)}";
+                }
+                else if (textBox?.Text?.Length == 4) // if the user entered 4 digits (example 1125 => 11/25 )
+                {
+                    textBox.Text = $"{textBox?.Text?.Substring(0, 2)}/20{textBox?.Text?.Substring(2, 2)}";
+                }
+                else
+                {
+                    textBox.Text = "01/0001";
+                } 
             }
-            else if (textBox?.Text?.Length == 3) // if the user entered 3 digits (example 125 => 1/25 )
-            {
-                textBox.Text = $"0{textBox?.Text?.Substring(0, 1)}/20{textBox?.Text?.Substring(1, 2)}";
-            }
-            else if (textBox?.Text?.Length == 4) // if the user entered 4 digits (example 1125 => 11/25 )
-            {
-                textBox.Text = $"{textBox?.Text?.Substring(0, 2)}/20{textBox?.Text?.Substring(2, 2)}";
-            }    
         }
 
         private void TextBox_KeyDown(object? sender, KeyEventArgs e)
