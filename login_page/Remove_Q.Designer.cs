@@ -220,7 +220,6 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(itemsToBeAdded_GV);
-            Controls.Add(StockOperationType);
             Controls.Add(resultContainer);
             Controls.Add(panel2);
             Controls.Add(searchBy_Combo);
@@ -252,7 +251,6 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem1;
-        private ComboBox StockOperationType;
         private TableLayoutPanel tableLayoutPanel1;
         private ToolStripMenuItem expirationDatesToolStripMenuItem;
     }

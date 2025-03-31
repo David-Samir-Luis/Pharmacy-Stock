@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
@@ -13,21 +14,28 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace login_page
 {
     public partial class Add_Q : UserControl
     {
+        enum GVColumnsIndex
+        {
+            Code,
+            Name,
+            Stock,
+            Price,
+            InQuantity,
+            ExpireDate
+        }
 
         List<Medicine> itemNames;
         BindingList<MedicineGV> itemsToBeAdded_ls = new();
         public Add_Q()
         {
-            InitializeComponent();
-            searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
-            StockOperationType.SelectedIndex = 0; // default is Stock Out 
+            InitializeComponent();           
             itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
@@ -35,45 +43,31 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int InOut_Quantity { get; set; }
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
-            //public string? Barcode { get; }
-            //public DateOnly ExpiryDate { get; set; }
-
-            //public int? MinimumQuantity { get; set; }
-
+            public int InQuantity { get; set; }
+            [DisplayName("Expire Date")] // display name in the DataGridView
+            public string ExpireDate { get; set; }
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
-                InOut_Quantity = q;
+                InQuantity = q;
             }
             public int GetID()
             {
                 return medicine.Id;
             }
-            public void UpdateQuantity(string OpType)
+            public void UpdateQuantity()
             {
-                if (OpType == "Stock In")
-                {
-                    medicine.Quantity += InOut_Quantity;
-                }
-                else
-                {
-                    medicine.Quantity -= InOut_Quantity;
-                }
+                medicine.Quantity += InQuantity;
             }
         }
 
         void ResetPanel()
         {
-            // Reset panel
             search_txt.Text = "";
             itemsToBeAdded_ls.Clear(); // clear the list 
             search_txt.Focus();
-            // reset gridview 
-            //itemsToBeAdded_GV.DataSource = null;
-            //itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         private void searchBy_Combo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -90,7 +84,7 @@ namespace login_page
         public void searchGeneral(string searchText)
         {
             List<Medicine> item;
-            ;
+            if (string.IsNullOrEmpty(searchText)) return;
             switch (searchBy_Combo?.SelectedItem?.ToString())
             {
                 //case "Name":
@@ -99,14 +93,12 @@ namespace login_page
                 case "Barcode":
                     ///to do search by barcode 
                     item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode?.ToLower().Trim() == searchText).ToList();
-                    search_txt.Text = "";
                     break;
                 case "Code":
                     ///to do search by code 
                     item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code?.ToLower().Trim() == searchText).ToList();
                     break;
                 default:
-                    MessageBox.Show("Please select a valid search type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     item = null;
                     break;
             }
@@ -114,13 +106,13 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.InQuantity];
                 itemsToBeAdded_GV.BeginEdit(true);
             }
             else
             {
-                MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 search_txt.Focus();
+                search_txt.SelectAll();
             }
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
@@ -165,12 +157,6 @@ namespace login_page
             if (keyData == (Keys.Control | Keys.Delete))
             {
                 DeleteRow();
-                //if (itemsToBeAdded_ls.Count >= 0)
-                //{
-                //    itemsToBeAdded_ls.RemoveAt(itemsToBeAdded_ls.Count - 1);
-                //    itemsToBeAdded_GV.DataSource = null;
-                //    itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
-                //}
             }
             if (keyData == Keys.Insert)
             {
@@ -199,6 +185,7 @@ namespace login_page
 
         private void Add_Q_Load(object sender, EventArgs e)
         {
+            searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
             search_txt.Focus();
             resultContainer.BringToFront();
             // CenterButton();
@@ -210,7 +197,7 @@ namespace login_page
         //    cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
         //}
 
-        private async Task UpdateQuantityUsingQueryAsync()
+        private async Task UpdateQuantityAsync()
         {
             using (var db = new PharmacyStoreContext())
             {
@@ -230,14 +217,48 @@ namespace login_page
                 db.OperationsHistories.Add(new OperationsHistory
                 {
                     OperationTime = DateTime.Now,
-                    OperationType = StockOperationType?.SelectedItem?.ToString() ?? "Stock Out",
-                    //OperationDetails = "Add Quantity to Medicine",
+                    OperationType = "Stock In",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
                         MedicineId = m.GetID(),
-                        Quantity = (short)m.InOut_Quantity
+                        Quantity = (short)m.InQuantity
                     }).ToList()
                 });
+                await db.SaveChangesAsync();
+            }
+        }
+        private async Task AddNewRowInDrugDateStockAsync()
+        {
+            //TODO: parse the date and add it to the database as Dateonly
+            using (var db = new PharmacyStoreContext())
+            {
+                foreach (var item in itemsToBeAdded_ls)
+                {
+                    DateOnly ExpireDate;                
+                    if (!DateOnly.TryParseExact($"01/{item.ExpireDate}", "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ExpireDate))
+                    {
+                        MessageBox.Show("Invalid date", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    
+                    var drugDateStock=DbServices.Instance.GetData<DrugDateStock>().Find(m => (m.MedicineId == item.GetID() && (m.ExpireDate == ExpireDate)));
+                    
+                    if (drugDateStock is not null) // if the record already exists
+                    {
+                       drugDateStock.Quantity += item.InQuantity;
+                    }
+                    else
+                    {
+                        db.DrugDateStocks.Add(new DrugDateStock
+                        {
+                            MedicineId = item.GetID(),
+                            Quantity = item.InQuantity,
+                            ExpireDate = ExpireDate
+                        });
+                    }
+                    
+                }
+               
                 await db.SaveChangesAsync();
             }
         }
@@ -247,26 +268,33 @@ namespace login_page
             {
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString() ?? "Stock In");
+                    item.UpdateQuantity();
                 }
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
+                await UpdateQuantityAsync(); // save changes to database table medicines
                 await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
                 await DbServices.Instance.LoadDataAsync<OperationsHistory>(); // reload OperationsHistory data 
                 await DbServices.Instance.LoadDataAsync<OperationsMedicine>(); // reload OperationsMedicine data
                 ResetPanel();
             }
-            else
-            {
-                MessageBox.Show("NO items to be saved.", "Can't save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //else
+            //{
+            //    MessageBox.Show("NO items to be saved.", "Can't save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
         }
 
         private void cancel_n_Click(object sender, EventArgs e)
         {
-            ResetPanel();
+            //DateOnly ExpireDate ;
+            //DateOnly.TryParseExact($"01/{itemsToBeAdded_ls[0].ExpireDate}", "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ExpireDate);
+            //MessageBox.Show($"{ExpireDate}");
+            DialogResult result = MessageBox.Show("Are you sure you want to cancel changes ?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                ResetPanel();
+            }
         }
 
         private void itemsToBeAdded_GV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -274,8 +302,17 @@ namespace login_page
 
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
-                search_txt.Text = "";
-                search_txt.Focus();
+                if (e.ColumnIndex == (int)GVColumnsIndex.InQuantity)
+                {
+                    // move the focus to the next cell (date cell)
+                    itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[e.RowIndex].Cells[(int)GVColumnsIndex.ExpireDate];
+                    itemsToBeAdded_GV.BeginEdit(true);
+                }
+                else if (e.ColumnIndex == (int)GVColumnsIndex.ExpireDate)
+                {
+                    search_txt.Focus();
+                    search_txt.SelectAll();
+                }
             }
         }
         private void SearchByname(string name)
@@ -340,12 +377,15 @@ namespace login_page
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
+            if (itemsToBeAdded_GV.CurrentCell.ColumnIndex==(int)GVColumnsIndex.InQuantity) // column index of InQuantity
             {
-                if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
+                if (!string.IsNullOrWhiteSpace(e.FormattedValue?.ToString()))
                 {
-                    MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    if (!int.TryParse(e.FormattedValue.ToString(), out int number) || number < 0)
+                    {
+                        MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    }
                 }
             }
         }
@@ -377,7 +417,7 @@ namespace login_page
             Medicine item;
             item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name == name.Trim()).First();
             itemsToBeAdded_ls.Add(new MedicineGV(item, 1));
-            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.InQuantity];
             itemsToBeAdded_GV.BeginEdit(true);
         }
 
@@ -391,11 +431,48 @@ namespace login_page
 
         private void itemsToBeAdded_GV_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (e.Control is System.Windows.Forms.TextBox textBox)
+            if (e.Control is TextBox textBox)
             {
+                if (itemsToBeAdded_GV.CurrentCell.ColumnIndex == (int)GVColumnsIndex.ExpireDate )
+                {
+                    textBox.KeyPress -= TextBox_KeyPress;
+                    textBox.Leave -= TextBox_Leave;
+
+                    textBox.KeyPress += TextBox_KeyPress;
+                    textBox.Leave += TextBox_Leave;
+                    textBox.Name = "ExpireDate";
+                }
+                else
+                {
+                    textBox.Name = "InQuantity";
+                }
                 // Remove old event handlers to avoid duplicates
                 textBox.KeyDown -= TextBox_KeyDown;
-                textBox.KeyDown += TextBox_KeyDown;
+                    textBox.KeyDown += TextBox_KeyDown;
+            }
+        }
+
+        private void TextBox_Leave(object? sender, EventArgs e)
+        {
+            TextBox? textBox = sender as TextBox;
+            if (textBox is not null && textBox.Name== "ExpireDate")
+            {
+                if (textBox?.Text?.Length > 0 && textBox?.Text?.Length < 3)
+                {
+                    MessageBox.Show("Please enter a valid date. (725) or (0725) ", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else if (textBox?.Text?.Length == 3) // if the user entered 3 digits (example 125 => 1/25 )
+                {
+                    textBox.Text = $"0{textBox?.Text?.Substring(0, 1)}/20{textBox?.Text?.Substring(1, 2)}";
+                }
+                else if (textBox?.Text?.Length == 4) // if the user entered 4 digits (example 1125 => 11/25 )
+                {
+                    textBox.Text = $"{textBox?.Text?.Substring(0, 2)}/20{textBox?.Text?.Substring(2, 2)}";
+                }
+                else
+                {
+                    textBox.Text = "01/0001";
+                } 
             }
         }
 
@@ -406,11 +483,30 @@ namespace login_page
                 e.SuppressKeyPress = true; // Prevents deletion in edit mode
             }
         }
-
         private void expirationDatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Expiration_dates expiration = new();
             expiration.ShowDialog();
         }
+
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextBox? textBox = sender as TextBox;
+
+            // the column should allow only numbers ,and any character except numbers should be blocked (ignored)
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true; // Block non-numeric input
+                return;
+            }
+
+            int? pos = textBox?.SelectionStart;
+
+            if (char.IsDigit(e.KeyChar))
+            {
+                // allow only 4 characters maximum , 1 or 2 digits for the month and 2 digits for the year
+                if (textBox.Text.Length==4) e.Handled = true; // Prevent extra typing
+            }
+        }       
     }
 }

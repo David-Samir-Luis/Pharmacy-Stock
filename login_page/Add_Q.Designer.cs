@@ -43,7 +43,7 @@
             resultContainer = new FlowLayoutPanel();
             panel2 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            StockOperationType = new ComboBox();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)itemsToBeAdded_GV).BeginInit();
             contextMenuStrip_n.SuspendLayout();
             panel2.SuspendLayout();
@@ -195,8 +195,8 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.Controls.Add(cancel_n, 2, 0);
             tableLayoutPanel1.Controls.Add(save_n, 1, 0);
+            tableLayoutPanel1.Controls.Add(cancel_n, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -205,22 +205,18 @@
             tableLayoutPanel1.Size = new Size(966, 105);
             tableLayoutPanel1.TabIndex = 33;
             // 
-            // StockOperationType
+            // label1
             // 
-            StockOperationType.DropDownStyle = ComboBoxStyle.DropDownList;
-            StockOperationType.FormattingEnabled = true;
-            StockOperationType.Items.AddRange(new object[] { "Stock Out", "Stock In" });
-            StockOperationType.Location = new Point(718, 17);
-            StockOperationType.Name = "StockOperationType";
-            StockOperationType.Size = new Size(151, 28);
-            StockOperationType.TabIndex = 17;
+            label1.Location = new Point(0, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(100, 23);
+            label1.TabIndex = 0;
             // 
             // Add_Q
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(itemsToBeAdded_GV);
-            Controls.Add(StockOperationType);
             Controls.Add(resultContainer);
             Controls.Add(panel2);
             Controls.Add(searchBy_Combo);
@@ -252,8 +248,8 @@
         private ContextMenuStrip contextMenuStrip_n;
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem1;
-        private ComboBox StockOperationType;
         private TableLayoutPanel tableLayoutPanel1;
         private ToolStripMenuItem expirationDatesToolStripMenuItem;
+        private Label label1;
     }
 }

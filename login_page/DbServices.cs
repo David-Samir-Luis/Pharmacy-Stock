@@ -32,7 +32,8 @@ namespace login_page
             await Task.WhenAll(
                   Instance.LoadDataAsync<Medicine>(),
                   Instance.LoadDataAsync<OperationsHistory>(),
-                  Instance.LoadDataAsync<OperationsMedicine>()
+                  Instance.LoadDataAsync<OperationsMedicine>(),
+                  Instance.LoadDataAsync<DrugDateStock>()
             );
         }
         public async Task LoadDataAsync<T>() where T : class
@@ -60,10 +61,35 @@ namespace login_page
             {
                 DateTime cutoffDate = DateTime.Now.AddDays(-30); // 30 days ago
 
-                int deletedRows = db.Database.ExecuteSqlRaw(
-                    "DELETE FROM Operations_History WHERE Operation_Time < {0}", cutoffDate);
+                try
+                {
+                    int deletedRows = db.Database.ExecuteSqlRaw(
+                                "DELETE FROM Operations_History WHERE Operation_Time < {0}", cutoffDate);
 
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show($"restart server (MSSQL$SQLEXPRESS02) from services ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw;
+                }
                 //MessageBox.Show($"Deleted {deletedRows} old records.");
+            }
+        }
+
+        internal void AddData<T>(T medicine) where T : class
+        {
+            // ensure that the class T is one of the classes in directory Model
+            // and NOT class PharmacyStoreContext
+            if ((typeof(T).Namespace != "login_page.Models")
+                && typeof(T) != typeof(PharmacyStoreContext))
+            {
+//                MessageBox.Show($"ERROR Type ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; 
+            }
+            using (var db = new PharmacyStoreContext())
+            {
+                db.Set<T>().Add(medicine);
+                db.SaveChanges();
             }
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,14 +21,20 @@ namespace login_page
 {
     public partial class Remove_Q : UserControl
     {
-
+        enum GVColumnsIndex
+        {
+            Code ,
+            Name ,
+            Stock ,
+            Price ,
+            Out_Quantity
+        }
         List<Medicine> itemNames;
         BindingList<MedicineGV> itemsToBeAdded_ls = new();
         public Remove_Q()
         {
             InitializeComponent();
             searchBy_Combo.SelectedIndex = 0; // default is search by Barcode
-            StockOperationType.SelectedIndex = 0; // default is Stock Out 
             itemsToBeAdded_GV.DataSource = itemsToBeAdded_ls;
         }
         class MedicineGV
@@ -35,9 +42,9 @@ namespace login_page
             private Medicine medicine;
             public string Code { get => medicine.Code; }
             public string Name { get => medicine.Name; }
-            public int InOut_Quantity { get; set; }
             public int Stock { get => medicine.Quantity; }
             public int? Price { get => medicine.Price; }
+            public int Out_Quantity { get; set; }
             //public string? Barcode { get; }
             //public DateOnly ExpiryDate { get; set; }
 
@@ -46,22 +53,15 @@ namespace login_page
             public MedicineGV(Medicine m, int q)
             {
                 medicine = m;
-                InOut_Quantity = q;
+                Out_Quantity = q;
             }
             public int GetID()
             {
                 return medicine.Id;
             }
-            public void UpdateQuantity(string OpType)
+            public void UpdateQuantity()
             {
-                if (OpType == "Stock In")
-                {
-                    medicine.Quantity += InOut_Quantity;
-                }
-                else
-                {
-                    medicine.Quantity -= InOut_Quantity;
-                }
+                medicine.Quantity -= Out_Quantity;
             }
         }
 
@@ -99,14 +99,12 @@ namespace login_page
                 case "Barcode":
                     ///to do search by barcode 
                     item = DbServices.Instance.GetData<Medicine>().Where(m => m.Barcode?.ToLower().Trim() == searchText).ToList();
-                    search_txt.Text = "";
                     break;
                 case "Code":
                     ///to do search by code 
                     item = DbServices.Instance.GetData<Medicine>().Where(c => c.Code?.ToLower().Trim() == searchText).ToList();
                     break;
                 default:
-                    MessageBox.Show("Please select a valid search type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     item = null;
                     break;
             }
@@ -114,13 +112,13 @@ namespace login_page
             if (item?.Any() ?? false)
             {
                 itemsToBeAdded_ls.Add(new MedicineGV(item.First(), 1));
-                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+                itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.Out_Quantity];
                 itemsToBeAdded_GV.BeginEdit(true);
             }
             else
             {
-                MessageBox.Show($"NO drug with this {searchBy_Combo?.SelectedItem?.ToString()}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 search_txt.Focus();
+                search_txt.SelectAll();
             }
         }
         private void search_txt_KeyDown(object sender, KeyEventArgs e)
@@ -210,7 +208,7 @@ namespace login_page
         //    cancel_n.Location = new Point(2 * x, cancel_n.Location.Y);
         //}
 
-        private async Task UpdateQuantityUsingQueryAsync()
+        private async Task UpdateQuantityAsync()
         {
             using (var db = new PharmacyStoreContext())
             {
@@ -230,12 +228,11 @@ namespace login_page
                 db.OperationsHistories.Add(new OperationsHistory
                 {
                     OperationTime = DateTime.Now,
-                    OperationType = StockOperationType?.SelectedItem?.ToString() ?? "Stock Out",
-                    //OperationDetails = "Add Quantity to Medicine",
+                    OperationType= "Stock Out",
                     OperationsMedicines = itemsToBeAdded_ls.Select(m => new OperationsMedicine
                     {
                         MedicineId = m.GetID(),
-                        Quantity = (short)m.InOut_Quantity
+                        Quantity = (short)m.Out_Quantity
                     }).ToList()
                 });
                 await db.SaveChangesAsync();
@@ -245,14 +242,25 @@ namespace login_page
         {
             if (!itemsToBeAdded_ls.IsNullOrEmpty())
             {
+                foreach (DataGridViewRow row in itemsToBeAdded_GV.Rows)
+                {
+                    if ((int)row.Cells[(int)GVColumnsIndex.Out_Quantity].Value > (int)row.Cells[(int)GVColumnsIndex.Stock].Value)
+                    {
+                        MessageBox.Show($"The quantity of ({row.Cells[(int)GVColumnsIndex.Name].Value}) is more than the stock!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        itemsToBeAdded_GV.CurrentCell = row.Cells[(int)GVColumnsIndex.Out_Quantity]; // Focus on the matching row
+                        itemsToBeAdded_GV.BeginEdit(true); // Optional: highlight the row
+                        return; // Stop after finding the first match
+                    }
+                }
+
                 foreach (var item in itemsToBeAdded_ls)
                 {
-                    item.UpdateQuantity(StockOperationType?.SelectedItem?.ToString() ?? "Stock In");
+                    item.UpdateQuantity();
                 }
 
                 MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                await UpdateQuantityUsingQueryAsync(); // save changes to database table medicines
+                await UpdateQuantityAsync(); // save changes to database table medicines
                 await AddNewRowInOperationHistoryAsync(); // save changes to database tables operationsHistories and operationsMedicines
                 await DbServices.Instance.LoadDataAsync<OperationsHistory>(); // reload OperationsHistory data 
                 await DbServices.Instance.LoadDataAsync<OperationsMedicine>(); // reload OperationsMedicine data
@@ -274,8 +282,8 @@ namespace login_page
 
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0) // Ensure it's not the header row/column
             {
-                search_txt.Text = "";
                 search_txt.Focus();
+                search_txt.SelectAll();
             }
         }
         private void SearchByname(string name)
@@ -340,12 +348,15 @@ namespace login_page
         private void itemsToBeAdded_GV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             // Check if the column should allow only numbers (optional)
-            if (itemsToBeAdded_GV.Columns[e.ColumnIndex].Name == "InOut_Quantity")
+            if (e.ColumnIndex == (int)GVColumnsIndex.Out_Quantity) // Column index of the Quantity column
             {
-                if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
+                if (!string.IsNullOrWhiteSpace(e.FormattedValue?.ToString()))
                 {
-                    MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    if (!int.TryParse(e.FormattedValue.ToString(), out int number) || number < 0)
+                    {
+                        MessageBox.Show("Please enter a positive number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true; // Cancel the entry and keep focus on the cell
+                    }
                 }
             }
         }
@@ -377,7 +388,7 @@ namespace login_page
             Medicine item;
             item = DbServices.Instance.GetData<Medicine>().Where(m => m.Name == name.Trim()).First();
             itemsToBeAdded_ls.Add(new MedicineGV(item, 1));
-            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[2];
+            itemsToBeAdded_GV.CurrentCell = itemsToBeAdded_GV.Rows[itemsToBeAdded_GV.Rows.Count - 1].Cells[(int)GVColumnsIndex.Out_Quantity];
             itemsToBeAdded_GV.BeginEdit(true);
         }
 

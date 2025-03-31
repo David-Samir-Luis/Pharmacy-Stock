@@ -24,21 +24,27 @@ namespace login_page
         }
         class MedicineGV
         {
-
-            private string code;
-            private string name;
-            private int? price;
-            public MedicineGV(string _code, string _name, int? _price)
+            private Medicine medicine;
+            List<DrugDateStock> drugDateStock;
+            //private string code;
+            //private string name;
+            //private int? price;
+            public MedicineGV(Medicine medicine)
             {
-                code = _code;
-                name = _name;
-                price = _price;
+                this.medicine = medicine;
+                drugDateStock = DbServices.Instance.GetData<DrugDateStock>().Where(d => d.MedicineId == medicine.Id).ToList();
+                //code = _code;
+                //name = _name;
+                //price = _price;
             }
 
+            
+            public string Code { get => medicine.Code; }
+            public string Name { get => medicine.Name; }
+            public List<DateOnly> ExpireDate { get => drugDateStock.Select(m=>m.ExpireDate).ToList(); }
 
-            public string Code { get => code; }
-            public string Name { get => name; }
-            public int? Price { get => price; }
+            public int Stock { get => medicine.Quantity; }
+            public int? Price { get => medicine.Price; }
         }
         // Converts `*` -> `.*` and `?` -> `.` for regex matching
         static string WildcardToRegex(string pattern)
@@ -56,16 +62,16 @@ namespace login_page
             switch (searchBy_Combo?.SelectedItem?.ToString())
             {
                 case "Name":
-                    itemsToBeAdded_ls = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Name?.ToLower()?.Trim() ?? string.Empty, WildcardToRegex(searchText), RegexOptions.IgnoreCase)).Select(m => new MedicineGV(m.Code, m.Name, m.Price)).ToList();
+                    itemsToBeAdded_ls = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Name?.ToLower()?.Trim() ?? string.Empty, WildcardToRegex(searchText), RegexOptions.IgnoreCase)).Select(m => new MedicineGV(m)).ToList();
                     break;
                 case "Barcode":
                     ///to do search by barcode 
-                    itemsToBeAdded_ls = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Barcode?.ToLower()?.Trim() ?? string.Empty, WildcardToRegex(searchText), RegexOptions.IgnoreCase)).Select(m => new MedicineGV(m.Code, m.Name, m.Price)).ToList();
+                    itemsToBeAdded_ls = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Barcode?.ToLower()?.Trim() ?? string.Empty, WildcardToRegex(searchText), RegexOptions.IgnoreCase)).Select(m => new MedicineGV(m)).ToList();
 
                     break;
                 case "Code":
                     ///to do search by code 
-                    itemsToBeAdded_ls = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Code?.ToLower()?.Trim() ?? string.Empty, WildcardToRegex(searchText), RegexOptions.IgnoreCase)).Select(m => new MedicineGV(m.Code, m.Name, m.Price)).ToList();
+                    itemsToBeAdded_ls = DbServices.Instance.GetData<Medicine>().Where(m => Regex.IsMatch(m.Code?.ToLower()?.Trim() ?? string.Empty, WildcardToRegex(searchText), RegexOptions.IgnoreCase)).Select(m => new MedicineGV(m)).ToList();
                     break;
                 default:
                     MessageBox.Show("Please select a valid search type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
